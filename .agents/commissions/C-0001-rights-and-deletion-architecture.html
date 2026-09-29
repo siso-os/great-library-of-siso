@@ -1,0 +1,97 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>C-0001 — Rights and deletion architecture</title>
+<style>
+body{font:16px/1.6 -apple-system,system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem}
+code{background:#f4f4f4;padding:.1em .3em;border-radius:3px}
+h2{border-bottom:1px solid #ddd;padding-bottom:.2rem;margin-top:2rem}
+blockquote{border-left:3px solid #ccc;margin:1rem 0;padding:.2rem 1rem;color:#444}
+table{border-collapse:collapse;width:100%}th,td{border:1px solid #ddd;padding:.4rem .6rem;text-align:left}
+</style>
+
+<h1>C-0001 — Rights and deletion architecture</h1>
+<p><strong>STATUS:</strong> drafted &nbsp;·&nbsp; <strong>BUDGET:</strong> one long lane, hard stop on overrun</p>
+
+<h2>QUESTION</h2>
+<p>How should rights, privacy and deletion state physically travel through the People Graph —
+from source observation, through canonical admission, into derived projections, embeddings,
+exports and backups — such that any source's removal obligation can be honoured and
+<em>proven</em> honoured?</p>
+
+<h2>WHY FRONTIER</h2>
+<ul>
+<li><strong>Wrong is expensive:</strong> this is a legal and ethical failure mode, not a bug. Reddit's
+policy forbids retaining deleted data <em>even de-identified</em>; X requires deletion within 24h.
+Getting the cascade wrong means retaining data you were obliged to destroy.</li>
+<li><strong>Durable:</strong> a rights model outlives every schema version built on top of it.</li>
+<li><strong>Unblocks:</strong> every source pilot. <em>You cannot ingest what you cannot delete.</em>
+Cohort A's gate already says "no source proceeds to persistent storage until this harness passes."</li>
+<li>Requires holding share-alike propagation, GDPR erasure, tombstones that survive rebuild,
+and cascade-into-embeddings in one head simultaneously. That is the discriminating skill.</li>
+</ul>
+
+<h2>RECEIPTS — measured, not assumed</h2>
+<table>
+<tr><th>Fact</th><th>Source</th></tr>
+<tr><td><strong>The database has ZERO rights or privacy columns.</strong> Anywhere.</td>
+<td><code>consolidation-source/GQ-010-BASELINE.html</code>, measured against the real 1.1&nbsp;GB
+graph-v2 asset</td></tr>
+<tr><td>Three documents assume rights state travels with every observation: ADR-0005,
+<code>pg-observation-0.1</code> invariant 9, and the 38-source rights matrix.</td>
+<td>All three now on <code>main</code></td></tr>
+<tr><td>38 sources classified <code>pilot_now</code> / <code>research_more</code> /
+<code>discovery_only</code> / <code>do_not_ingest</code>, each with a stated deletion obligation.</td>
+<td><code>research/people-graph-sources/rights-and-deletion-matrix.md</code></td></tr>
+<tr><td>A ten-part deletion architecture is already specified — source registry, snapshot ledger,
+observation isolation, current-state overlay, purge queue, suppression ledger, rights
+compartments, field denylist, publication gate, quarterly drill.</td>
+<td>same file</td></tr>
+<tr><td>86.7% of person rows are <code>kind=unknown</code>, so "is this a living person"
+is frequently unanswerable — which is a rights question, not a data-quality one.</td>
+<td>GQ-010 baseline</td></tr>
+</table>
+
+<blockquote>The gap is not that nobody thought about this. It is that the thinking is
+<strong>entirely unimplemented</strong>. This commission closes the largest
+thinking-to-practice gap in the estate.</blockquote>
+
+<h2>FALSIFIERS — what would prove the answer wrong</h2>
+<ol>
+<li>A deletion drill leaves the record recoverable from any backup, snapshot, embedding, export
+or cached projection.</li>
+<li>Rights state cannot survive a common export — i.e. a CC&nbsp;BY-SA record loses its attribution
+requirement when projected.</li>
+<li>Honouring one source's obligation requires manual full-database surgery rather than a
+deterministic cascade.</li>
+<li>A share-alike-derived projection cannot be kept logically separable from CC0 metadata.</li>
+<li>The design requires a schema change so invasive that a rebuild from source is cheaper —
+in which case say so, and the answer is "rebuild", not "migrate".</li>
+</ol>
+
+<h2>DELIVERABLE</h2>
+<ul>
+<li>A concrete schema addition (DDL) covering rights, privacy classification, publication state
+and removal obligation at the levels the matrix requires: source, snapshot, observation, Work,
+evidence, claim, projection.</li>
+<li>A purge cascade specification with a <em>proof obligation</em> — the exact query set that
+demonstrates a deleted record is gone from every derived surface.</li>
+<li>A suppression-ledger design: non-content tombstones so historical snapshots cannot resurrect
+removed data.</li>
+<li>A quarterly deletion-drill runbook, executable, one record per source class.</li>
+<li>Land as a draft ADR in the Great Library plus DDL on a branch in
+<code>siso-people-graph</code>. <strong>Draft PR only — do not merge.</strong></li>
+</ul>
+
+<h2>NOT IN SCOPE</h2>
+<ul>
+<li>Legal advice. Flag where counsel is required; do not substitute for it.</li>
+<li>Ingesting any source. This is architecture, not acquisition.</li>
+<li>Re-litigating the 38-source classifications — they were researched against primary terms.</li>
+<li>Touching <code>identity_v3</code>, <code>query_v3</code> or <code>build_v3</code>; other lanes own those.</li>
+</ul>
+
+<h2>WHY THIS IS FIRST</h2>
+<p>Every other source-expansion commission is gated behind it. The 180-day pilot portfolio's
+own Cohort A gate reads: <em>"no source proceeds to persistent storage until this harness
+passes. If the current data model cannot represent source records separately from canonical
+decisions, stop and fix that seam first."</em> That seam is this commission.</p>

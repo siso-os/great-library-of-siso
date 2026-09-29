@@ -1,0 +1,98 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Commissions — long-running frontier-model research lanes</title>
+<style>
+body{font:16px/1.6 -apple-system,system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem}
+code{background:#f4f4f4;padding:.1em .3em;border-radius:3px}
+table{border-collapse:collapse;width:100%;margin:1rem 0}
+th,td{border:1px solid #ddd;padding:.45rem .6rem;text-align:left;vertical-align:top}
+th{background:#f7f7f7}
+.no{color:#a00}.yes{color:#070}
+blockquote{border-left:3px solid #ccc;margin:1rem 0;padding:.2rem 1rem;color:#444}
+</style>
+
+<h1>Commissions</h1>
+
+<p><strong>A commission is a research question given to a frontier model on a long-running,
+budgeted lane.</strong> It is not a task. Tasks live in <code>.agents/tasks/</code> in the repo that
+owns the work, and are executed by ordinary agents. A commission is for a question where
+<em>being wrong is expensive</em> and <em>being right compounds</em>.</p>
+
+<h2>The admission filter</h2>
+
+<p>Three tests. All three must pass, or it is a task, not a commission.</p>
+
+<table>
+<tr><th>Test</th><th>Why</th></tr>
+<tr><td><strong>Would a merely-good agent get this materially wrong?</strong></td>
+<td>If a competent Opus lane produces the same answer, spend the Opus lane. Frontier
+capacity is the scarce resource; implementation is not where it wins.</td></tr>
+<tr><td><strong>Is the answer durable?</strong></td>
+<td>Still true in six months. A benchmark, an architecture, a rights model — yes.
+A merge, a CI fix, a red build — no.</td></tr>
+<tr><td><strong>Does it unblock other work?</strong></td>
+<td>Terminal answers are worth less than answers that release a queue behind them.</td></tr>
+</table>
+
+<h2>What is explicitly NOT a commission</h2>
+<ul>
+<li>Writing code from an existing spec — Opus lanes did the whole of 2026-08-07/08 fine.</li>
+<li>Merging, CI repair, dependency bumps, schema edits with a known shape.</li>
+<li>Anything already specified in <code>parallel-slam.md</code> or the superseded pack — those
+are executable, not researchable.</li>
+</ul>
+
+<h2>Why this file exists — the lesson it encodes</h2>
+
+<blockquote>
+Measured across 2026-08-07/08: <strong>seven separate times</strong> something reported success
+while doing nothing. A test that failed to <em>import</em>. A delete loop silently no-op'd by a
+grep filter. A validator whose <code>EXPECTED_TABLES</code> never required the 4 missing tables.
+A <code>meta_json LIKE '%key%'</code> counter matching values as keys. An FTS query that raised
+<code>no such column</code> and fell back to a scan. Every one was caught by an outside reader or by
+measurement — <strong>never by the author's own tests.</strong>
+</blockquote>
+
+<p>Fixtures encode what you already believed. So every commission must state, up front,
+<strong>what would make it wrong</strong> — and a deliverable that cannot be falsified is rejected
+on arrival, however plausible it reads.</p>
+
+<h2>Commission file contract</h2>
+
+<p>One HTML per commission, named <code>C-NNNN-slug.html</code>. Required sections:</p>
+
+<table>
+<tr><th>Section</th><th>Content</th></tr>
+<tr><td><code>QUESTION</code></td><td>One sentence. The thing we do not know.</td></tr>
+<tr><td><code>WHY FRONTIER</code></td><td>Which of the three admission tests it passes, and how.</td></tr>
+<tr><td><code>RECEIPTS</code></td><td>The measured facts it starts from, each with its source. No commission starts from an assumption.</td></tr>
+<tr><td><code>FALSIFIERS</code></td><td>What result would prove the answer wrong. Mandatory.</td></tr>
+<tr><td><code>DELIVERABLE</code></td><td>Exact artifact shape and where it lands.</td></tr>
+<tr><td><code>BUDGET</code></td><td>Hard ceiling. A commission that overruns reports and stops.</td></tr>
+<tr><td><code>NOT IN SCOPE</code></td><td>What it must not drift into.</td></tr>
+<tr><td><code>STATUS</code></td><td><code>drafted</code> / <code>commissioned</code> / <code>returned</code> / <code>accepted</code> / <code>rejected</code></td></tr>
+</table>
+
+<p><strong>Returned ≠ accepted.</strong> A returned commission gets read adversarially before it is
+accepted, by someone who did not write it. That gate is the entire reason
+GQ-009 watch-trigger 5 is recorded as <em>partially</em> fired and not fired: 16 of 17
+librarian proposals survived independent review, but a Claude reviewed a Claude —
+mechanically independent, not a different mind with different blind spots.</p>
+
+<h2>Register</h2>
+
+<table>
+<tr><th>ID</th><th>Question</th><th>Unblocks</th><th>Status</th></tr>
+<tr><td><a href="C-0001-rights-and-deletion-architecture.html">C-0001</a></td>
+<td>How does rights, privacy and deletion state actually travel through the graph?</td>
+<td>Every source pilot. Cannot ingest what you cannot delete.</td><td>drafted</td></tr>
+<tr><td><a href="C-0002-prior-art-authority-control.html">C-0002</a></td>
+<td>Who has already solved cross-domain person resolution, and what did they learn?</td>
+<td>Potentially deletes whole tracks from the 100-track roadmap.</td><td>drafted</td></tr>
+<tr><td>C-0003</td><td>A versioned identity-resolution benchmark with ground truth.</td>
+<td>GQ-010 criterion 2. Currently unmeasurable against any standard.</td><td>planned</td></tr>
+<tr><td>C-0004</td><td>Adversarially break the ten 100× value theses before funding them.</td>
+<td>~£24k of costed pilots, none independently challenged.</td><td>planned</td></tr>
+<tr><td>C-0005</td><td>Which Library properties should be mechanically enforced rather than documented?</td>
+<td>The Library's own God Question. Documents get ignored; gates do not.</td><td>planned</td></tr>
+</table>

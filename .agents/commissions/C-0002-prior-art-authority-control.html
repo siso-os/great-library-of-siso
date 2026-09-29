@@ -1,0 +1,107 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>C-0002 — Prior art in authority control</title>
+<style>
+body{font:16px/1.6 -apple-system,system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem}
+code{background:#f4f4f4;padding:.1em .3em;border-radius:3px}
+h2{border-bottom:1px solid #ddd;padding-bottom:.2rem;margin-top:2rem}
+blockquote{border-left:3px solid #ccc;margin:1rem 0;padding:.2rem 1rem;color:#444}
+table{border-collapse:collapse;width:100%}th,td{border:1px solid #ddd;padding:.4rem .6rem;text-align:left;vertical-align:top}
+</style>
+
+<h1>C-0002 — Prior art: who already solved this?</h1>
+<p><strong>STATUS:</strong> drafted &nbsp;·&nbsp; <strong>BUDGET:</strong> one deep-research lane
+&nbsp;·&nbsp; <strong>Uses:</strong> deep research, not code execution</p>
+
+<h2>QUESTION</h2>
+<p>Cross-domain person resolution with reversible decisions, evidence receipts and rights
+propagation is not a new problem — it is <strong>authority control</strong>, a library-science
+discipline with roughly a century of institutional learning. Who has already solved it at scale,
+what did they learn the hard way, and <em>which of our 100 tracks does that make redundant?</em></p>
+
+<h2>WHY FRONTIER</h2>
+<ul>
+<li><strong>Highest ROI per token on the register.</strong> The plausible outcome is
+<em>deleting</em> work, not adding it. A track we do not have to build is worth more than one
+we build well.</li>
+<li><strong>Wrong is expensive in a quiet way:</strong> re-deriving a solved discipline costs
+months and nobody notices, because the work looks productive throughout.</li>
+<li><strong>Durable:</strong> VIAF's merge/split semantics and ORCID's disambiguation failures
+will still be true in five years.</li>
+<li>Needs genuine synthesis across library science, scholarly infrastructure and software
+provenance — three literatures that rarely cite each other. That is the discriminating skill.</li>
+</ul>
+
+<h2>RECEIPTS — what we already measured, so do not re-derive it</h2>
+<table>
+<tr><th>Fact</th><th>Source</th></tr>
+<tr><td>Of 280,708 people, exactly <strong>three</strong> spanned more than one domain
+(Karpathy, Jensen Huang, Simon Willison). Later remeasured at <strong>9,818</strong> —
+the README figure was wrong.</td>
+<td>Foundry <code>PEOPLE-GRAPH-ENRICHMENT-LOG.md</code>; corrected in GQ-010 baseline</td></tr>
+<tr><td><strong>The GitHub↔book identity stitch is structurally dead.</strong> Joining resolved
+<code>real_name</code> against book author names gave 2 matches, both false (a modern developer
+matched to a 6th-century monk). Filtered to plausible human names: zero. Ceiling is 419 people
+because Gutenberg is public-domain and the populations do not overlap in time.</td>
+<td>Foundry enrichment log, measured</td></tr>
+<tr><td>Naive person↔person co-membership = <strong>720,107,620 pairs</strong>. Rejected.</td>
+<td>same</td></tr>
+<tr><td>The working substitute was a <strong>topic bridge</strong>: 819 vocabulary terms appear
+verbatim in both LCSH and GitHub topics, giving 22,466 people cross-population reach.
+Exact match only — fuzzy matching "generates plausible-looking garbage".</td>
+<td>same</td></tr>
+<tr><td>Ten OSS tools already evaluated with reuse verdicts (Splink, Dedupe, OpenRefine, dlt,
+DuckDB, ScanCode, RDFLib, NetworkX, DataHub, OpenMetadata). Conclusion: none supplies the core
+invariant — source observations surviving independently of reversible identity decisions.</td>
+<td><code>research/people-graph-sources/github-landscape.md</code></td></tr>
+</table>
+
+<blockquote><strong>Do not re-run the OSS tooling sweep.</strong> It is done and its verdicts are
+evidenced. This commission is about <em>institutional</em> prior art — the organisations that
+run authority control in production — not about libraries you can pip install.</blockquote>
+
+<h2>WHAT TO INVESTIGATE</h2>
+<ol>
+<li><strong>VIAF</strong> — clusters merge and split as national libraries disagree. How is that
+reconciled? What breaks? Their freshness problems are already flagged as a gate in our source matrix.</li>
+<li><strong>ORCID</strong> — self-asserted identity at scale. What fraction of records are
+duplicates, and what did they learn about letting people claim their own identifiers?</li>
+<li><strong>Wikidata</strong> — reversible, evidenced, community-adjudicated claims with
+deprecation ranks. Closest existing analogue to our assertion model. What are its known failure modes?</li>
+<li><strong>Library authority files</strong> (LoC/NACO, ISNI) — a century of rules for
+"same person?" including pseudonyms, corporate bodies and undifferentiated names.</li>
+<li><strong>Software Heritage</strong> — durable artifact identity across renames, transfers and
+takedowns. Directly relevant to our GitHub rename problem.</li>
+<li><strong>Scholarly disambiguation literature</strong> — measured precision/recall for
+author-name disambiguation. What accuracy is actually achievable, and at what review cost?
+This calibrates whether GQ-010's ≥99.5% target is realistic or fantasy.</li>
+</ol>
+
+<h2>FALSIFIERS</h2>
+<ol>
+<li>The prior art turns out not to transfer — their populations, incentives or funding models
+differ so fundamentally that the lessons do not apply. Say so plainly; that is a real result.</li>
+<li>No institution reports measured precision, in which case GQ-010's 99.5% target has no
+external calibration and should be restated as an assumption rather than a criterion.</li>
+<li>The recommendation is "build it ourselves anyway" — acceptable <em>only</em> with a
+specific reason per rejected option.</li>
+</ol>
+
+<h2>DELIVERABLE</h2>
+<ul>
+<li>A synthesis with <strong>citations to primary sources</strong>, not summaries of summaries.</li>
+<li>A verdict per institution: <em>adopt the model</em> / <em>adopt the vocabulary</em> /
+<em>learn from the failure</em> / <em>not applicable</em>, each with its reason.</li>
+<li><strong>The list of the 100 tracks this makes redundant</strong>, with the prior art that
+supersedes each. This is the primary deliverable — everything else is supporting.</li>
+<li>An external calibration for achievable identity precision and its review cost.</li>
+<li>Lands as a research document in the Great Library. Draft PR only.</li>
+</ul>
+
+<h2>NOT IN SCOPE</h2>
+<ul>
+<li>Re-running the OSS tooling evaluation (done, evidenced).</li>
+<li>Retrying the GitHub↔book stitch. Measured dead, ceiling 419, zero plausible matches.</li>
+<li>Ingesting anything. Research only.</li>
+<li>Recommending a vendor or platform migration.</li>
+</ul>
