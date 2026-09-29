@@ -1,0 +1,106 @@
+{
+  "schema_version": "1.0.0",
+  "record_type": "event",
+  "id": "gls:event:f0ace343-ca3d-4792-8e03-f8f6e6ce739e",
+  "occurred_at": "2026-08-07T02:36:02+07:00",
+  "recorded_at": "2026-08-07T02:36:02+07:00",
+  "immutable": true,
+  "entry_type": "initiative_updated",
+  "thread": {
+    "id": "gls:thread:remote-viewing-research-module",
+    "name": "Remote Viewing Research Module",
+    "kind": "research"
+  },
+  "status": "completed",
+  "title": "Remote viewing module expanded with civilian tools and solo automation audit",
+  "summary": "The remote-viewing Research module now adds a source-audited civilian ecosystem guide, a rigorous solo software and target-blind voice-monitor architecture, corrections to scoring and training-duration folklore, a cannabis and cognitive-state evidence boundary, 12 additional source records, and nine additional graded claims. The module now indexes 36 sources and 33 claims while retaining the existing blinded practice, experimental, safety, and rights boundaries.",
+  "intent": "Convert the user-provided discussion about apps, GitHub repositories, communities, videos, solo testing, voice guidance, training time, and cannabis into a durable evidence layer that distinguishes software functionality and testimony from controlled evidence and specifies what a SISO solo trainer must guarantee.",
+  "reasoning": [
+    "The motivating conversation identified a real missing layer: civilian practice infrastructure and software-mediated solo testing were discussed extensively but had not been audited inside the first module.",
+    "The expansion verifies named open-source projects where repositories exist, marks archived, proprietary, opaque, association, provider, community, and media surfaces as distinct source classes, and refuses to infer efficacy from product existence or popularity.",
+    "A software coordinator can reduce interpersonal cueing but is only blind when the complete information flow protects target identity, metadata, logs, retrieval, memory, candidate labels, judging, aborts, and publication.",
+    "The target-blind voice-monitor design keeps protocol prompting separate from target assignment and later judging, preserves every prompt, and makes isolation testable rather than relying on agent role names.",
+    "The expansion corrects the claim that a universal SRI score was simply matching words divided by total words and instead preserves blind rank-order judging as a primary reproducible baseline.",
+    "Training-duration, alpha/theta, fasting, caffeine, and cannabis assertions remain hypotheses unless supported by prospective outcome data; the cited THC study is used only as a cognitive-state caution because it was not a remote-viewing experiment.",
+    "No generated site, Work, Release, Source Inventory, or whole-Library Snapshot was modified; the expansion remains inside the reserved remote-viewing research lane."
+  ],
+  "changes": [
+    {
+      "kind": "document",
+      "reference": "research/remote-viewing/civilian-tools-and-media.md",
+      "summary": "Added the civilian ecosystem audit, software-versus-evidence boundary, solo information-flow architecture, target-blind voice-monitor contract, scoring correction, training and substance audits, media-use rules, and SISO trainer build specification."
+    },
+    {
+      "kind": "registry_record",
+      "reference": "research/remote-viewing/sources/civilian-tools-media-and-state.json",
+      "summary": "Added 12 source records covering psitool, RVMe, ECHO-CLAW, ClairV, VEREVIO, Social RV, IRVA programmes and media, Monroe training, r/remoteviewing, and a randomized THC cognition study."
+    },
+    {
+      "kind": "registry_record",
+      "reference": "research/remote-viewing/source-index.json",
+      "summary": "Added the civilian tools, media, and state source ledger to the module source index and expanded the publication boundary."
+    },
+    {
+      "kind": "registry_record",
+      "reference": "research/remote-viewing/claims.json",
+      "summary": "Expanded the claim ledger from 24 to 33 claims with explicit findings and update gates for software blinding, scoring, training time, cannabis, media, voice agents, AI scoring, and civilian infrastructure."
+    },
+    {
+      "kind": "document",
+      "reference": "research/remote-viewing/README.md",
+      "summary": "Linked the civilian tools and solo automation audit from the module start page."
+    }
+  ],
+  "scope": {
+    "work_ids": [
+      "gls:work:9b18cc64-7d5e-4f30-b63d-a0ec30c1f7e1",
+      "gls:work:2fa08dac-937a-44d3-a547-f16ac28c4e25"
+    ],
+    "repository_urls": [
+      "https://github.com/sisodias/great-library-of-siso"
+    ]
+  },
+  "coordination": {
+    "owner": "GPT-5.6 Pro for Shaan Sisodia",
+    "branch": "agent/remote-viewing-research-module",
+    "reserved_paths": [
+      "research/remote-viewing/**",
+      "registry/events/2026-08-07-remote-viewing-research-*.json"
+    ]
+  },
+  "visibility": "public",
+  "predecessor_event_id": "gls:event:ff89dfcd-736c-4572-bc5a-3137fe219b7d",
+  "evidence": [
+    {
+      "kind": "source_review",
+      "reference": "source-review:remote-viewing-civilian-ecosystem:2026-08-07",
+      "observed_at": "2026-08-07",
+      "summary": "Twelve additional sources were classified as open-source software, archived software, experimental AI framework, opaque or proprietary product surfaces, association and practice programmes, recorded-media indexes, user-generated community material, and a primary randomized cognition study."
+    },
+    {
+      "kind": "integration_check",
+      "reference": "changed-artifact-check:research/remote-viewing-civilian-expansion:2026-08-07",
+      "observed_at": "2026-08-07",
+      "summary": "Local structural checks parsed all changed JSON, verified 12 unique source IDs and 33 unique claim IDs, validated required source and claim fields and statuses, confirmed every new source is cited by a claim, resolved changed Markdown links, and found no credential or machine-path patterns."
+    },
+    {
+      "kind": "registry_validation",
+      "reference": "git-blob-identity:agent/remote-viewing-research-module@36b00778ccb76529f98143dea8bc754a9352b05a",
+      "observed_at": "2026-08-07",
+      "summary": "The five changed module artifacts were written to the draft pull-request branch with content identities matching the locally checked Git blobs before this Event was appended."
+    },
+    {
+      "kind": "documentation",
+      "reference": "validation-boundary:remote-viewing-civilian-expansion:2026-08-07",
+      "observed_at": "2026-08-07",
+      "summary": "The changed artifacts were validated independently of a full repository checkout. Repository-wide npm verification, generated-site, immutable-history, and link gates remain authoritative CI responsibilities for the pull request."
+    }
+  ],
+  "next_actions": [
+    "Run the full repository verification workflow against the updated draft pull request and preserve the exact CI verdict.",
+    "Build a version-0.1 solo trainer from the integrity-first specification without giving the voice monitor target, retrieval, shared-memory, or judging access.",
+    "Run adversarial leakage tests covering filenames, metadata, caches, prompt context, logs, target-canary values, candidate labels, abort handling, and transcript mutation.",
+    "Pilot at least ten complete assign-lock-judge-reveal sessions and retain every miss, abort, protocol violation, target receipt, prompt log, and ranking.",
+    "Obtain review from one methodologically sympathetic and one critical reviewer before formal Work and Release promotion."
+  ]
+}

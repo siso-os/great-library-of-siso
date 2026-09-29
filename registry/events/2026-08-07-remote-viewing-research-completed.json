@@ -1,0 +1,152 @@
+{
+  "schema_version": "1.0.0",
+  "record_type": "event",
+  "id": "gls:event:ff89dfcd-736c-4572-bc5a-3137fe219b7d",
+  "occurred_at": "2026-08-07T01:33:32+07:00",
+  "recorded_at": "2026-08-07T01:33:32+07:00",
+  "immutable": true,
+  "entry_type": "initiative_completed",
+  "thread": {
+    "id": "gls:thread:remote-viewing-research-module",
+    "name": "Remote Viewing Research Module",
+    "kind": "research"
+  },
+  "status": "completed",
+  "title": "Remote viewing research and practice module authored and verified",
+  "summary": "The isolated Research module now provides an evidence-balanced STARGATE history, a mechanism-hypothesis map, a six-stage CRV practice manual, a stricter experimental protocol, a printable worksheet, 24 reviewed source records, 24 graded claims, a clearly non-research 12-target demonstration pool, and a tested blind-task integrity tool without changing generated site or registry-selection surfaces owned by active parallel lanes.",
+  "intent": "Close the authored-module lane with a usable practice and research system that honors the requested first-principles possibility stance while keeping practice assumptions, empirical evidence, causal theories, operational value, source rights, and future registry promotion explicitly separate.",
+  "reasoning": [
+    "Research remains the correct owning section because remote viewing combines declassified history, laboratory design, practitioner method, operational-use claims, and unresolved causal questions; History and declassified-document collections can later project the Work through typed relationships.",
+    "The module deliberately supports practice under a provisional possibility premise while requiring opaque cues, role separation, target commitments, transcript locks, decoy judging, complete trial accounting, and falsification rules before any evidential claim advances.",
+    "The evidence record is represented as mixed rather than promotional or dismissive: positive studies, explicit null and low-correlation sessions, critiques, the AIR laboratory-versus-operations split, opposing expert interpretations, later synthesis, and current expert opinion remain distinguishable evidence types.",
+    "CRV terms such as Matrix, signal line, ideogram, and AOL are preserved as historically documented practitioner vocabulary; no physical, telepathic, clairvoyant, precognitive, or decision-augmentation mechanism is promoted as established.",
+    "External government records, manuals, papers, and feedback media remain upstream-owned and linked rather than copied; the widely circulated 1986 CRV manual is correctly described as an externally preserved practitioner-archive document without an established CIA Reading Room identity or official DIA document number.",
+    "The active People Graph lane owns the next whole-Library Snapshot and related registry surfaces, and the UNSOLVEABLE Mathematics lane owns root documentation indexes, so this completed lane remains path-isolated and defers Work, Release, Source Inventory, Snapshot, and generated-site promotion."
+  ],
+  "changes": [
+    {
+      "kind": "document",
+      "reference": "research/remote-viewing/README.md",
+      "summary": "Added the Research placement, three-track operating stance, evidence boundary, CRV stage overview, first-session workflow, safety rules, and formal promotion gates."
+    },
+    {
+      "kind": "document",
+      "reference": "research/remote-viewing/history-and-evidence.md",
+      "summary": "Added a source-led history from early SRI work through AIR and current literature, including positive, null, low-correlation, ambiguous, foreign-assessment, and operational-utility evidence."
+    },
+    {
+      "kind": "document",
+      "reference": "research/remote-viewing/mechanism-hypotheses.md",
+      "summary": "Separated operational procedure, practitioner phenomenology, and causal explanation, then defined discriminating tests for leakage, judging, statistical artifacts, telepathy, clairvoyance, precognition, decision augmentation, CRV signal-line theory, and hybrid accounts."
+    },
+    {
+      "kind": "document",
+      "reference": "research/remote-viewing/practice-protocol.md",
+      "summary": "Added a complete six-stage beginner CRV workflow with role separation, AOL handling, transcript locking, blind judging, feedback, an eight-week programme, metrics, failure modes, and ethical boundaries."
+    },
+    {
+      "kind": "document",
+      "reference": "research/remote-viewing/experimental-method.md",
+      "summary": "Added preregistration, target design, randomization, commitment, blinding, transcript sanitation, judging, statistical, adversarial-control, AI-use, replication, and release contracts."
+    },
+    {
+      "kind": "document",
+      "reference": "research/remote-viewing/session-template.md",
+      "summary": "Added a printable worksheet spanning pre-session state, Stages I through VI, transcript lock, blind judging, reveal, post-feedback learning, and ledger closeout."
+    },
+    {
+      "kind": "registry_record",
+      "reference": "research/remote-viewing/source-index.json",
+      "summary": "Added a selective source index resolving 24 government, practitioner, experimental, critical, review, and expert-opinion records with explicit evidence roles, limitations, and rights notes."
+    },
+    {
+      "kind": "registry_record",
+      "reference": "research/remote-viewing/claims.json",
+      "summary": "Added 24 claims classified as documented record, source-reported positive, source-reported negative, contested, not established, unknown, or methodological rule, each with sources and an update gate."
+    },
+    {
+      "kind": "registry_record",
+      "reference": "research/remote-viewing/example-target-pool.json",
+      "summary": "Added a 12-target contrast pool for tooling rehearsal with an explicit prohibition on treating it as a formal research pool."
+    },
+    {
+      "kind": "generator",
+      "reference": "research/remote-viewing/tools/target_manager.py",
+      "summary": "Added a standard-library blind-task tool that creates target-free public tasks, private nonce-backed SHA-256 commitments, immutable transcript locks, verified reveal receipts, and overwrite protection."
+    },
+    {
+      "kind": "test",
+      "reference": "research/remote-viewing/tools/test_target_manager.py",
+      "summary": "Added seven integration and tamper tests covering target leakage, full assignment-lock-reveal flow, altered assignments, changed transcripts, overwrite attempts, and duplicate targets."
+    },
+    {
+      "kind": "test",
+      "reference": "research/remote-viewing/verify_module.py",
+      "summary": "Added the offline module gate for file presence, JSON shape, source/claim integrity, rights notes, relative links, publication safety, Python compilation, and target-manager tests."
+    },
+    {
+      "kind": "document",
+      "reference": "research/remote-viewing/HANDOFF.md",
+      "summary": "Recorded scope, placement, truth and tool boundaries, validation, source and rights limits, promotion sequence, next research, and merge-safe paths."
+    }
+  ],
+  "scope": {
+    "work_ids": [
+      "gls:work:9b18cc64-7d5e-4f30-b63d-a0ec30c1f7e1",
+      "gls:work:2fa08dac-937a-44d3-a547-f16ac28c4e25"
+    ],
+    "repository_urls": [
+      "https://github.com/sisodias/great-library-of-siso"
+    ]
+  },
+  "coordination": {
+    "owner": "GPT-5.6 Pro for Shaan Sisodia",
+    "branch": "agent/remote-viewing-research-module",
+    "reserved_paths": [
+      "research/remote-viewing/**",
+      "registry/events/2026-08-07-remote-viewing-research-*.json"
+    ]
+  },
+  "visibility": "public",
+  "predecessor_event_id": "gls:event:a5b790fd-abe1-49e9-a648-76676c50ba17",
+  "evidence": [
+    {
+      "kind": "source_review",
+      "reference": "source-review:remote-viewing-primary-record:2026-08-07",
+      "observed_at": "2026-08-07",
+      "summary": "Twenty-four source records were classified across government archives, practitioner history, early positive experiments, failed replications and critiques, independent reviews, opposing AIR expert assessments, modern empirical work, meta-analysis, and current expert guidance."
+    },
+    {
+      "kind": "integration_check",
+      "reference": "module-check:research/remote-viewing:2026-08-07",
+      "observed_at": "2026-08-07",
+      "summary": "The offline verifier passed with 24 sources, 24 claims, 12 demonstration targets, 14 relative links checked, 161 source-ID mentions, 16 publication-safe files scanned, and seven target-manager tests."
+    },
+    {
+      "kind": "registry_validation",
+      "reference": "git-blob-identity:agent/remote-viewing-research-module@32a00545ec4c58bd334ca0ab6c6f04b85c5d57a9",
+      "observed_at": "2026-08-07",
+      "summary": "All 16 module files stored on GitHub matched the locally validated Git blob identities byte for byte before the completion Event was appended."
+    },
+    {
+      "kind": "integration_check",
+      "reference": "compare:main...agent/remote-viewing-research-module:2026-08-07",
+      "observed_at": "2026-08-07",
+      "summary": "Before closeout the branch was 17 commits ahead and zero behind canonical main, and its diff contained exactly the 16 reserved module files."
+    },
+    {
+      "kind": "documentation",
+      "reference": "validation-boundary:remote-viewing-module:2026-08-07",
+      "observed_at": "2026-08-07",
+      "summary": "The module was built and validated without a full repository checkout; authoritative pull-request CI must still run the repository-wide npm verification, immutable-history, generated-site, link, and publication gates."
+    }
+  ],
+  "next_actions": [
+    "Run the full repository npm verification gate in the draft pull-request environment and preserve the exact CI verdict.",
+    "Obtain independent review from at least one methodologically sympathetic and one critical reviewer before promotion.",
+    "Run at least ten clean pilot sessions to demonstrate that assignment, lock, judging, reveal, and ledger workflows are usable without target leakage.",
+    "Review page-level provenance and rights for every source, then create a reference-only Source Inventory rather than importing the external document payloads.",
+    "After active registry and index lanes close, register an independent Remote Viewing Research and Practice Work, publish an immutable Release pinned to an exact commit, select it in a successor whole-Library Snapshot, and generate its public reading surface.",
+    "Build a primary-source foreign-programme inventory that separates Soviet or Russian records from U.S. intelligence assessments, translations, memoirs, and later retellings."
+  ]
+}
