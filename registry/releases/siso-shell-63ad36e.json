@@ -1,0 +1,152 @@
+{
+  "schema_version": "1.0.0",
+  "record_type": "release",
+  "id": "gls:release:aabac7d2-8cb1-4116-9b2a-db2fc6d6463d",
+  "work_id": "gls:work:dd051ce3-520e-4799-87b0-1e3f2182cc72",
+  "version": "0.3.0+63ad36e",
+  "title": "SISO shell and template bank — parts v2 from the 21st.dev corpus",
+  "released_at": "2026-09-06T22:00:49+07:00",
+  "observed_at": "2026-09-06",
+  "immutable": true,
+  "artifacts": [
+    {
+      "id": "gls:artifact:fb30e64e-d1fc-46c1-85d1-d2933f72c539",
+      "kind": "source_archive",
+      "locator": "https://github.com/sisodias/siso-shell/archive/63ad36e74d390f9f0acf8c2e47737c816298839b.tar.gz",
+      "revision": "63ad36e74d390f9f0acf8c2e47737c816298839b",
+      "availability": "public",
+      "owner": "sisodias",
+      "ownership": "siso",
+      "license": {
+        "status": "pending",
+        "spdx": "NOASSERTION",
+        "reason": "The repository still carries no LICENSE file, so no general redistribution permission is asserted. Third-party rights inside it are recorded per component: lucide icon paths are ISC (shell/icons.mjs), and every robbed 21st.dev presentation pattern is listed with its author, URL and licence basis in parts/SOURCES.md.",
+        "evidence": [
+          {
+            "kind": "source_review",
+            "reference": "https://github.com/sisodias/siso-shell/blob/63ad36e74d390f9f0acf8c2e47737c816298839b/parts/SOURCES.md",
+            "observed_at": "2026-09-06",
+            "summary": "parts/SOURCES.md names each source component, its author, its 21st.dev URL, the licence basis relied on (21st.dev site-wide MIT terms; no per-component LICENSE file exists in the harvest) and exactly what was taken — presentation only, rebuilt as static HTML/CSS on CRM tokens. Fetched HTTP 200 at the pinned commit."
+          },
+          {
+            "kind": "source_review",
+            "reference": "https://github.com/sisodias/siso-shell/blob/63ad36e74d390f9f0acf8c2e47737c816298839b/shell/icons.mjs",
+            "observed_at": "2026-09-06",
+            "summary": "The lucide ISC notice and copyright are carried verbatim at the top of the icon module."
+          }
+        ]
+      },
+      "integrity": {
+        "state": "verified",
+        "algorithm": "git_commit_sha1",
+        "digest": "63ad36e74d390f9f0acf8c2e47737c816298839b"
+      }
+    }
+  ],
+  "distribution": {
+    "addressable": {
+      "state": "verified",
+      "reason": "Exact public source commit is recorded.",
+      "evidence": [
+        {
+          "kind": "integration_check",
+          "reference": "https://github.com/sisodias/siso-shell/commit/63ad36e74d390f9f0acf8c2e47737c816298839b",
+          "observed_at": "2026-09-06",
+          "summary": "Public GitHub commit resolved at the exact source pin; HTTP 200."
+        }
+      ]
+    },
+    "archive_downloadable": {
+      "state": "verified",
+      "reason": "Commit-scoped source archive returned HTTP 200.",
+      "evidence": [
+        {
+          "kind": "public_locator",
+          "reference": "https://codeload.github.com/sisodias/siso-shell/tar.gz/63ad36e74d390f9f0acf8c2e47737c816298839b",
+          "observed_at": "2026-09-06",
+          "summary": "The exact public source archive was fetched successfully."
+        }
+      ]
+    },
+    "manifest_resolvable": {
+      "state": "verified",
+      "reason": "Manifest identifies its stable Work and exact source artifact.",
+      "evidence": [
+        {
+          "kind": "registry_validation",
+          "reference": "registry/releases/siso-shell-63ad36e.json",
+          "observed_at": "2026-09-06",
+          "summary": "References and artifact pin are checked by the Library verification gate."
+        }
+      ]
+    },
+    "installable": {
+      "state": "verified",
+      "reason": "The published bank builds and serves from this commit.",
+      "evidence": [
+        {
+          "kind": "release_receipt",
+          "reference": "repo-check:siso-shell:63ad36e74d390f9f0acf8c2e47737c816298839b",
+          "observed_at": "2026-09-06",
+          "summary": "Parts v2 rebuilt from the saved 21st.dev corpus: the relationship map is a real tidy-tree graph layout, repository cards, the reasoning spine, the agent-entry terminal, the catalogue search row, the metric strip and the gallery's bento cards each name their source component, author, 21st URL and licence basis in parts/SOURCES.md. Animated state icons on the rail draw and settle on hover and are disabled under prefers-reduced-motion. All 24 template families render their example, node --test passes 4/4, and every in-page anchor on all 24 example pages resolves to a real element id."
+        }
+      ]
+    },
+    "forkable": {
+      "state": "unavailable",
+      "reason": "General redistribution permission is not asserted; the repository carries no LICENSE file.",
+      "evidence": [
+        {
+          "kind": "source_review",
+          "reference": "https://github.com/sisodias/siso-shell/blob/63ad36e74d390f9f0acf8c2e47737c816298839b/README.md",
+          "observed_at": "2026-09-06",
+          "summary": "No LICENSE file exists at the pinned commit; licensing remains pending as on the 0.1.0 and 0.2.0 releases."
+        }
+      ]
+    },
+    "portable": {
+      "state": "verified",
+      "reason": "No runtime dependency: static HTML, CSS and one 115-line template engine; the graph layout is computed at build time and ships as plain SVG.",
+      "evidence": [
+        {
+          "kind": "release_receipt",
+          "reference": "repo-check:siso-shell:63ad36e74d390f9f0acf8c2e47737c816298839b",
+          "observed_at": "2026-09-06",
+          "summary": "Parts v2 rebuilt from the saved 21st.dev corpus: the relationship map is a real tidy-tree graph layout, repository cards, the reasoning spine, the agent-entry terminal, the catalogue search row, the metric strip and the gallery's bento cards each name their source component, author, 21st URL and licence basis in parts/SOURCES.md. Animated state icons on the rail draw and settle on hover and are disabled under prefers-reduced-motion. All 24 template families render their example, node --test passes 4/4, and every in-page anchor on all 24 example pages resolves to a real element id."
+        }
+      ]
+    }
+  },
+  "evidence": [
+    {
+      "kind": "integration_check",
+      "reference": "https://github.com/sisodias/siso-shell/commit/63ad36e74d390f9f0acf8c2e47737c816298839b",
+      "observed_at": "2026-09-06",
+      "summary": "Public GitHub commit resolved at the exact source pin; HTTP 200."
+    },
+    {
+      "kind": "release_receipt",
+      "reference": "repo-check:siso-shell:63ad36e74d390f9f0acf8c2e47737c816298839b",
+      "observed_at": "2026-09-06",
+      "summary": "Parts v2 rebuilt from the saved 21st.dev corpus: the relationship map is a real tidy-tree graph layout, repository cards, the reasoning spine, the agent-entry terminal, the catalogue search row, the metric strip and the gallery's bento cards each name their source component, author, 21st URL and licence basis in parts/SOURCES.md. Animated state icons on the rail draw and settle on hover and are disabled under prefers-reduced-motion. All 24 template families render their example, node --test passes 4/4, and every in-page anchor on all 24 example pages resolves to a real element id."
+    },
+    {
+      "kind": "public_locator",
+      "reference": "https://siso-shell.pages.dev/",
+      "observed_at": "2026-09-06",
+      "summary": "The bank's gallery: 24 bento cards, each carrying a rendered preview of that family's own example. HTTP 200."
+    },
+    {
+      "kind": "public_locator",
+      "reference": "https://siso-shell.pages.dev/t/U4/example/",
+      "observed_at": "2026-09-06",
+      "summary": "The project one pager rendered from real data, showing the tidy-tree relationship map, the repository cards and the agent-entry terminal. HTTP 200."
+    },
+    {
+      "kind": "source_review",
+      "reference": "https://github.com/sisodias/siso-shell/blob/63ad36e74d390f9f0acf8c2e47737c816298839b/parts/SOURCES.md",
+      "observed_at": "2026-09-06",
+      "summary": "Rights provenance for every robbed presentation pattern: 8 source components with author, URL, licence basis and what was taken."
+    }
+  ]
+}

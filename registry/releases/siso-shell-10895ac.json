@@ -1,0 +1,146 @@
+{
+  "schema_version": "1.0.0",
+  "record_type": "release",
+  "id": "gls:release:415a2279-7f36-48bb-b1b1-e41d1264a500",
+  "work_id": "gls:work:dd051ce3-520e-4799-87b0-1e3f2182cc72",
+  "version": "0.3.1+10895ac",
+  "title": "SISO shell and template bank — parts re-sourced from the SISO design system hub",
+  "released_at": "2026-09-06T22:11:40+07:00",
+  "observed_at": "2026-09-06",
+  "immutable": true,
+  "artifacts": [
+    {
+      "id": "gls:artifact:f11a2f46-7c19-4492-a36a-7c5a53c88f88",
+      "kind": "source_archive",
+      "locator": "https://github.com/sisodias/siso-shell/archive/10895acfbd79bfa21698c2ba4cd160e2410ac141.tar.gz",
+      "revision": "10895acfbd79bfa21698c2ba4cd160e2410ac141",
+      "availability": "public",
+      "owner": "sisodias",
+      "ownership": "siso",
+      "license": {
+        "status": "not_applicable",
+        "spdx": "NOASSERTION",
+        "reason": "SISO-owned work; no third-party licence applies. The component designs these parts follow come from the SISO design system hub (Lordsisodia/siso-knowledge, SISO_Knowledge/design-system), which is ours, and parts/SOURCES.md maps each part to its hub component and to the file and line each rule came from. The repository carries no LICENSE file, so no public redistribution grant is asserted to third parties.",
+        "evidence": [
+          {
+            "kind": "source_review",
+            "reference": "https://github.com/sisodias/siso-shell/blob/10895acfbd79bfa21698c2ba4cd160e2410ac141/parts/SOURCES.md",
+            "observed_at": "2026-09-06",
+            "summary": "parts/SOURCES.md maps each part to its component in the SISO design system hub, cites the source file and line each design rule came from, and records what was deliberately not taken and why. Fetched HTTP 200 at the pinned commit."
+          }
+        ]
+      },
+      "integrity": {
+        "state": "verified",
+        "algorithm": "git_commit_sha1",
+        "digest": "10895acfbd79bfa21698c2ba4cd160e2410ac141"
+      }
+    }
+  ],
+  "distribution": {
+    "addressable": {
+      "state": "verified",
+      "reason": "Exact public source commit is recorded.",
+      "evidence": [
+        {
+          "kind": "integration_check",
+          "reference": "https://github.com/sisodias/siso-shell/commit/10895acfbd79bfa21698c2ba4cd160e2410ac141",
+          "observed_at": "2026-09-06",
+          "summary": "Public GitHub commit resolved at the exact source pin; HTTP 200."
+        }
+      ]
+    },
+    "archive_downloadable": {
+      "state": "verified",
+      "reason": "Commit-scoped source archive returned HTTP 200.",
+      "evidence": [
+        {
+          "kind": "public_locator",
+          "reference": "https://codeload.github.com/sisodias/siso-shell/tar.gz/10895acfbd79bfa21698c2ba4cd160e2410ac141",
+          "observed_at": "2026-09-06",
+          "summary": "The exact public source archive was fetched successfully."
+        }
+      ]
+    },
+    "manifest_resolvable": {
+      "state": "verified",
+      "reason": "Manifest identifies its stable Work and exact source artifact.",
+      "evidence": [
+        {
+          "kind": "registry_validation",
+          "reference": "registry/releases/siso-shell-10895ac.json",
+          "observed_at": "2026-09-06",
+          "summary": "References and artifact pin are checked by the Library verification gate."
+        }
+      ]
+    },
+    "installable": {
+      "state": "verified",
+      "reason": "The published bank builds and serves from this commit.",
+      "evidence": [
+        {
+          "kind": "release_receipt",
+          "reference": "repo-check:siso-shell:10895acfbd79bfa21698c2ba4cd160e2410ac141",
+          "observed_at": "2026-09-06",
+          "summary": "Parts rebuilt from the SISO design system hub (SISO_Knowledge/design-system, 3,567 components with installed source). The relationship map is a build-time tidy-tree graph layout taken from the hub's airbnb-linktypes (@visx/hierarchy, d3 Reingold-Tilford), adopting its sibling-vs-cousin separation ratio and its rule that a node's shape signals whether it leads anywhere; the gallery's bento cards, the catalogue search row, the metric strip and the rail's animated state icons each cite their hub component in parts/SOURCES.md. All 24 template families render their example, node --test passes 4/4, and every in-page anchor on all 24 example pages resolves to a real element id."
+        }
+      ]
+    },
+    "forkable": {
+      "state": "unavailable",
+      "reason": "Internal SISO work; the repository carries no LICENSE file, so no public redistribution grant is asserted.",
+      "evidence": [
+        {
+          "kind": "source_review",
+          "reference": "https://github.com/sisodias/siso-shell/blob/10895acfbd79bfa21698c2ba4cd160e2410ac141/README.md",
+          "observed_at": "2026-09-06",
+          "summary": "No LICENSE file exists at the pinned commit, as on the 0.1.0 and 0.2.0 releases."
+        }
+      ]
+    },
+    "portable": {
+      "state": "verified",
+      "reason": "No runtime dependency: static HTML, CSS and one 115-line template engine; the graph layout is computed at build time and ships as plain SVG.",
+      "evidence": [
+        {
+          "kind": "release_receipt",
+          "reference": "repo-check:siso-shell:10895acfbd79bfa21698c2ba4cd160e2410ac141",
+          "observed_at": "2026-09-06",
+          "summary": "Parts rebuilt from the SISO design system hub (SISO_Knowledge/design-system, 3,567 components with installed source). The relationship map is a build-time tidy-tree graph layout taken from the hub's airbnb-linktypes (@visx/hierarchy, d3 Reingold-Tilford), adopting its sibling-vs-cousin separation ratio and its rule that a node's shape signals whether it leads anywhere; the gallery's bento cards, the catalogue search row, the metric strip and the rail's animated state icons each cite their hub component in parts/SOURCES.md. All 24 template families render their example, node --test passes 4/4, and every in-page anchor on all 24 example pages resolves to a real element id."
+        }
+      ]
+    }
+  },
+  "evidence": [
+    {
+      "kind": "integration_check",
+      "reference": "https://github.com/sisodias/siso-shell/commit/10895acfbd79bfa21698c2ba4cd160e2410ac141",
+      "observed_at": "2026-09-06",
+      "summary": "Public GitHub commit resolved at the exact source pin; HTTP 200."
+    },
+    {
+      "kind": "release_receipt",
+      "reference": "repo-check:siso-shell:10895acfbd79bfa21698c2ba4cd160e2410ac141",
+      "observed_at": "2026-09-06",
+      "summary": "Parts rebuilt from the SISO design system hub (SISO_Knowledge/design-system, 3,567 components with installed source). The relationship map is a build-time tidy-tree graph layout taken from the hub's airbnb-linktypes (@visx/hierarchy, d3 Reingold-Tilford), adopting its sibling-vs-cousin separation ratio and its rule that a node's shape signals whether it leads anywhere; the gallery's bento cards, the catalogue search row, the metric strip and the rail's animated state icons each cite their hub component in parts/SOURCES.md. All 24 template families render their example, node --test passes 4/4, and every in-page anchor on all 24 example pages resolves to a real element id."
+    },
+    {
+      "kind": "public_locator",
+      "reference": "https://siso-shell.pages.dev/",
+      "observed_at": "2026-09-06",
+      "summary": "The bank's gallery: 24 bento cards, each carrying a rendered preview of that family's own example. HTTP 200."
+    },
+    {
+      "kind": "public_locator",
+      "reference": "https://siso-shell.pages.dev/t/U4/example/",
+      "observed_at": "2026-09-06",
+      "summary": "The project one pager rendered from real data, showing the tidy-tree relationship map, the repository cards and the agent-entry terminal. HTTP 200."
+    },
+    {
+      "kind": "source_review",
+      "reference": "https://github.com/sisodias/siso-shell/blob/10895acfbd79bfa21698c2ba4cd160e2410ac141/parts/SOURCES.md",
+      "observed_at": "2026-09-06",
+      "summary": "Design provenance: each part mapped to its component in the SISO design system hub, with the source file and line for every rule taken."
+    }
+  ]
+}
