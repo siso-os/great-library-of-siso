@@ -6,7 +6,7 @@
   "scripts": {
     "build": "node build.mjs",
     "build:cloud": "node build.mjs --cloud",
-    "deploy": "node build.mjs --cloud && ../node_modules/.bin/wrangler deploy -c deploy/wrangler.toml"
+    "deploy": "node build.mjs --cloud && ../../../../../Great_Library_of_SISO/node_modules/.bin/wrangler deploy -c deploy/wrangler.toml --assets ../../../../great-library/reader-dist-cloud"
   },
   "dependencies": {
     "markdown-it": "15.0.2",

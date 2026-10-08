@@ -1,0 +1,11 @@
+# npm run deploy   (node build.mjs --cloud, then wrangler deploy with --assets pointing at reader-dist-cloud)
+# Secret: WORLD_PASSWORD, the estate world's (.credentials/projects/SISO_Agents/siso-estate/world-worker.env).
+name = "siso-library"
+main = "worker.js"
+compatibility_date = "2026-09-01"
+account_id = "a955406e85b517fd5891b498f6e1643f"
+workers_dev = true
+
+[assets]
+binding = "ASSETS"
+run_worker_first = true

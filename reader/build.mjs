@@ -30,6 +30,8 @@ const DAY = 86_400_000;
 const SECRET = /(sk-(?:ant-|proj-)?[A-Za-z0-9_-]{24,}|ghp_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{20,}|AKIA[0-9A-Z]{16}|-----BEGIN [A-Z ]*PRIVATE KEY|xox[baprs]-[A-Za-z0-9-]{10,}|AIza[0-9A-Za-z_-]{35}|eyJhbGciOi[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,})/;
 const PRIVATE_WORDS = /whatsapp|life ?log|lifelock|calorie|fahmy|rolodex|people-graph|people graph/i;
 const PRIVATE_AGENTS = /^(LIFE|WHATSAPP|ROLODEX|FAHMY)/i;
+// Chat ids and phone numbers: a doc that names one stays local-only.
+const CHAT_ID = /\d{6,}(?:-\d+)?@(?:s\.whatsapp\.net|g\.us|c\.us|lid)\b|\+\d{2}[ \d]{9,14}\d/;
 const NEVER_PATH = /(^|\/)(personal|\.credentials|\.env[^/]*)(\/|$)/;
 
 // ---------- small helpers ----------
@@ -116,8 +118,8 @@ function fileDoc(g, p, extra = {}) {
   const src = read(p); if (src == null) return null;
   const html = /\.html?$/i.test(p);
   const title = extra.title || (html ? htmlTitle(src) : mdTitle(src, null)) || path.basename(p).replace(/\.(md|html?)$/i, "");
-  const priv = SECRET.test(src) || PRIVATE_WORDS.test(relWs(p)) || !!extra.private;
-  return addDoc(g, { kind: html ? "html" : "md", src: p, rel: relWs(p), title, summary: html ? htmlText(src).slice(0, 220) : mdSummary(src), mtime: mtime(p), hash: sha(src), private: priv, ...extra, title });
+  const priv = SECRET.test(src) || CHAT_ID.test(src) || PRIVATE_WORDS.test(relWs(p)) || !!extra.private;
+  return addDoc(g, { kind: html ? "html" : "md", src: p, rel: relWs(p), title, summary: html ? htmlText(src).slice(0, 220) : mdSummary(src), mtime: mtime(p), hash: sha(src), ...extra, title, private: priv });
 }
 
 // 1. Pages for you: every HTML page posted to Shaan in the console. Versions of one title fold into one page.
@@ -160,7 +162,7 @@ function collectPages() {
     const c = versions[0], t = Date.parse(c.ts) || NOW;
     const text = htmlText(c.body);
     const owner = names[c.agent] ? `${names[c.agent]}` : c.agent;
-    const priv = PRIVATE_AGENTS.test(c.agent) || PRIVATE_WORDS.test(`${c.title} ${text.slice(0, 20000)}`) || SECRET.test(c.body);
+    const priv = PRIVATE_AGENTS.test(c.agent) || PRIVATE_WORDS.test(`${c.title} ${text.slice(0, 20000)}`) || SECRET.test(c.body) || CHAT_ID.test(c.body);
     const g = group("pages", isoDay(t), fmtDay(t), { sort: -t, section: t > NOW - 7 * DAY ? "This week" : t > NOW - 31 * DAY ? "This month" : "Earlier" });
     addDoc(g, { kind: "console", card: c.id, title: c.title || htmlTitle(c.body) || "Untitled page", owner, agent: c.agent, rel: `console card ${c.id}`, mtime: t, summary: text.slice(0, 220), text, body: c.body, versions: versions.slice(1).map((v) => ({ id: v.id, ts: v.ts })), private: priv, slugHint: `${c.title || "page"}-${c.id.slice(-6)}` });
   }
