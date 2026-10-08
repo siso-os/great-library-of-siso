@@ -1,5 +1,8 @@
 # Library UI renewal: source, composition and acceptance
 
+> **Superseded, 9 Oct 2026.** The Library people read is now the reader in [`reader/`](../reader/README.md) (spec: [`reader/SPEC.html`](../reader/SPEC.html)): every doc on shelves with search, inside Agent Base's Estate and on a private Worker. This file is the September record for the older public site; its links and evidence still hold.
+
+
 Status: implementation proposal and review-branch documentation, 7 September 2026.
 This does not supersede an accepted ADR, appoint a replacement owner, create a
 parallel task system, or certify a deployment. The binding design brief remains

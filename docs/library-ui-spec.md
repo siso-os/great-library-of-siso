@@ -1,5 +1,8 @@
 # Great Library UI — Fable implementation brief
 
+> **Superseded, 9 Oct 2026.** The Library people read is now the reader in [`reader/`](../reader/README.md) (spec: [`reader/SPEC.html`](../reader/SPEC.html)): every doc on shelves with search, inside Agent Base's Estate and on a private Worker. This file is the September record for the older public site; its links and evidence still hold.
+
+
 Status: ready for Fable design and implementation; the current UI is an incomplete pilot.
 Direction: Shaan's September 5 Library requests and September 6 correction.
 Live baseline: https://great-library-of-siso.pages.dev/
