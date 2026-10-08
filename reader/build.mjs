@@ -81,6 +81,7 @@ const SHELVES = [
   { id: "pages", name: "Pages for you", icon: "sparkles", line: "Every page an agent has shown you, newest first" },
   { id: "projects", name: "Projects", icon: "folder", line: "Each live project's front door, specs, decisions and where the work stands" },
   { id: "research", name: "Research", icon: "flask", line: "God Questions, Foundry findings and the research records" },
+  { id: "foundry", name: "Foundry", icon: "radar", line: "What the world has built that we can use: repos, components, award sites, models, people, ranked" },
   { id: "industries", name: "Industries", icon: "factory", line: "Industry packs: the operator, their day, the tools, the open-source replacements" },
   { id: "knowledge", name: "Knowledge", icon: "brain", line: "Ranked insights from talks and papers, by topic" },
   { id: "banks", name: "Banks", icon: "boxes", line: "Components, repos and templates to build from" },
@@ -273,6 +274,34 @@ function collectWorks() {
   }
 }
 
+// 8. Foundry: RESEARCH's records (the mini's research/domains branch, read from git so nothing touches the mini).
+const AREA_NAMES = { "3d-motion": "3D and motion", assets: "Assets", awards: "Award-winning sites", components: "Components", "image-gen": "Image generation", people: "People", shells: "App shells", videos: "Videos", frameworks: "Frameworks", harnesses: "Harnesses", mcp: "MCP servers", memory: "Memory", "skill-hubs": "Skill hubs", "dictation-apps": "Dictation apps", "speech-models": "Speech models", stt: "Speech to text", tts: "Text to speech", "voice-agents": "Voice agents", "voice-ui": "Voice UI" };
+const DOMAIN_NAMES = { ui: "UI", "agent-bases": "Agent bases", voice: "Voice" };
+function collectFoundry() {
+  const repo = path.join(GL, "foundry"), ref = "refs/remotes/origin/research/domains";
+  try { execFileSync("git", ["-C", repo, "fetch", "-q", "origin", `research/domains:${ref}`], { timeout: 90_000, stdio: "ignore" }); } catch {}
+  let doms = []; try { doms = execFileSync("git", ["-C", repo, "ls-tree", "--name-only", `${ref}:research`], { encoding: "utf8" }).split("\n").filter((d) => d && !/\./.test(d) && d !== "tools"); } catch { return; }
+  for (const dom of doms) {
+    let raw; try { raw = execFileSync("git", ["-C", repo, "show", `${ref}:research/${dom}/records.jsonl`], { encoding: "utf8", maxBuffer: 300e6 }); } catch { continue; }
+    const recs = raw.trim().split("\n").map((l) => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean);
+    const dn = DOMAIN_NAMES[dom] || dom;
+    const g = group("foundry", dom, dn, { line: `${recs.length.toLocaleString()} records, each probed live and kept with its sources. Ranked 5 to 1 by RESEARCH's curators.` });
+    const areas = new Map(); for (const r of recs) (areas.get(r.area) || areas.set(r.area, []).get(r.area)).push(r);
+    for (const [area, items] of [...areas].sort((a, b) => b[1].length - a[1].length)) {
+      items.sort((a, b) => (b.rank || 0) - (a.rank || 0) || (b.stars || 0) - (a.stars || 0) || String(b.date || b.pushed || "").localeCompare(String(a.date || a.pushed || "")));
+      const an = AREA_NAMES[area] || area;
+      const latest = Math.max(...items.map((r) => Date.parse(r.first_seen || "") || 0));
+      addDoc(g, { kind: "foundry", title: `${dn} · ${an}`, items, rel: `foundry research/${dom}/records.jsonl · ${area}`, owner: "RESEARCH", mtime: latest, summary: `${items.length} records. Top: ${items.slice(0, 3).map((r) => r.title).join("; ")}`.slice(0, 220), slugHint: area });
+    }
+  }
+}
+
+// Live pages: Agent Base's probed list (its seed until the estate keeps one), when this machine runs Agent Base.
+let LIVE = [];
+async function collectLive() {
+  try { const r = await fetch("http://127.0.0.1:5401/api/library", { signal: AbortSignal.timeout(15_000) }); const d = await r.json(); LIVE = (d.live?.rows || []).filter((x) => x.url); } catch { LIVE = []; }
+}
+
 // ---------- rendering ----------
 function mdRenderer() {
   const md = new MarkdownIt({ html: false, linkify: true, typographer: true });
@@ -302,7 +331,7 @@ const ICON = {
   home: '<path d="M3 10.5 12 3l9 7.5V21h-6v-6H9v6H3z"/>', clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>', star: '<path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3 6.5 20.2l1-6.2L3 9.6l6.2-.9z"/>',
   sparkles: '<path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/>', folder: '<path d="M3 6h6l2 2h10v11H3z"/>', flask: '<path d="M9 3h6M10 3v6L4 20h16L14 9V3"/>',
   factory: '<path d="M3 21V10l6 4V10l6 4V6h6v15z"/>', brain: '<path d="M9 4a3 3 0 0 0-3 3 3 3 0 0 0-2 5 3 3 0 0 0 2 5 3 3 0 0 0 3 3h0V4zM15 4a3 3 0 0 1 3 3 3 3 0 0 1 2 5 3 3 0 0 1-2 5 3 3 0 0 1-3 3V4z"/>',
-  boxes: '<path d="M3 7l9-4 9 4-9 4zM3 7v10l9 4V11M21 7v10l-9 4"/>', library: '<path d="M4 4h4v16H4zM10 4h4v16h-4zM16 5l3.5-1 3 15.5-3.5 1z"/>', search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>', menu: '<path d="M4 6h16M4 12h16M4 18h16"/>', ext: '<path d="M14 4h6v6M20 4l-9 9M18 14v6H4V6h6"/>',
+  boxes: '<path d="M3 7l9-4 9 4-9 4zM3 7v10l9 4V11M21 7v10l-9 4"/>', library: '<path d="M4 4h4v16H4zM10 4h4v16h-4zM16 5l3.5-1 3 15.5-3.5 1z"/>', radar: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><path d="M12 12 19 5"/>', search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>', menu: '<path d="M4 6h16M4 12h16M4 18h16"/>', ext: '<path d="M14 4h6v6M20 4l-9 9M18 14v6H4V6h6"/>',
 };
 const icon = (n, s = 16) => `<svg class="ic" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${ICON[n] || ""}</svg>`;
 
@@ -385,11 +414,20 @@ function docMain(d, R) {
     body = `<div class="frame-bar"><a href="${esc(frame)}" target="_blank" rel="noopener">${icon("ext", 14)} Open on its own</a>${versions}</div><iframe class="frame" src="${esc(frame)}" sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-forms" loading="lazy" title="${esc(d.title)}"></iframe><div class="sr" data-pagefind-body>${esc((d.text || htmlText(read(d.src) || "")).slice(0, 60000))}</div>`;
   } else if (d.kind === "knowledge") {
     body = `<article class="prose" data-pagefind-body><p class="lede">${d.items.length} insights from talks and papers, best first. Tier A are the strongest.</p>${d.items.map((it, i) => `<section class="insight${i >= 40 ? " more" : ""}"><h3 id="i${i}"><span class="tier t${esc(it.tier)}">${esc(it.tier || "–")}</span>${esc(it.title)}</h3><div class="by">${esc(it.creator)}${it.score ? ` · score ${it.score.toFixed(1)}` : ""}${it.video ? ` · <a href="https://youtu.be/${esc(it.video)}" target="_blank" rel="noopener">watch</a>` : ""}</div>${md.render(it.body.replace(/\*\*Claim\*\*:[^\n]*\n?/, "").slice(0, 2400))}</section>`).join("")}${d.items.length > 40 ? `<button class="show-more" type="button" data-more>Show all ${d.items.length}</button>` : ""}</article>`;
+  } else if (d.kind === "foundry") {
+    const host = (u) => { try { return new URL(u).host.replace(/^www\./, ""); } catch { return ""; } };
+    const card = (r, i) => {
+      const link = r.url || (r.github ? `https://github.com/${r.github}` : "");
+      const tags = [r.kind, r.stars ? `★ ${Number(r.stars).toLocaleString()}` : "", r.licence && !/reference only/.test(r.licence) ? r.licence : "", r.award, r.by, r.date || r.pushed].filter(Boolean).slice(0, 5);
+      return `<div class="rec${i >= 120 ? " more" : ""}">${r.preview ? `<div class="pv"><img src="${esc(r.preview)}" alt="" loading="lazy" referrerpolicy="no-referrer" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.remove()"></div>` : ""}<div class="bd"><h3 id="r-${esc(r.id)}">${r.rank ? `<span class="rank">${"●".repeat(r.rank)}</span>` : ""}<a href="${esc(link)}" target="_blank" rel="noopener">${esc(r.title || host(link))}</a></h3>${r.why ? `<p class="why">${esc(r.why)}</p>` : ""}${r.desc ? `<p>${esc(String(r.desc).slice(0, 260))}</p>` : ""}<div class="tg"><span>${esc(host(link))}</span>${tags.map((t) => `<span>${esc(t)}</span>`).join("")}</div></div></div>`;
+    };
+    const ranked = d.items.filter((r) => r.rank).length;
+    body = `<article data-pagefind-body><p class="lede">${d.items.length.toLocaleString()} records${ranked ? `, ${ranked} ranked by RESEARCH (● to ●●●●●, best first)` : ""}. Each was probed live; ask any agent <code>foundry find &lt;words&gt;</code> for the same list.</p><div class="recs">${d.items.map(card).join("")}</div>${d.items.length > 120 ? `<button class="show-more" type="button" data-more>Show all ${d.items.length.toLocaleString()}</button>` : ""}</article>`;
   } else if (d.kind === "work") {
     const w = d.work;
     body = `<article class="prose" data-pagefind-body><p class="lede">${esc(w.summary)}</p><dl class="facts"><dt>Kind</dt><dd>${esc(w.type || "")}</dd><dt>Maturity</dt><dd>${esc(w.maturity || "")}</dd><dt>Section</dt><dd>${esc(w.section || "")}</dd><dt>Work ID</dt><dd><code>${esc(w.id)}</code></dd></dl><h2>Open it</h2><ul><li><a href="${PUBLIC_SITE}${esc(w.library_url)}" target="_blank" rel="noopener">The dossier on the public Library</a></li>${(w.source_links || []).map((l) => `<li><a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label || l.kind)}</a>${l.visibility ? ` <small>(${esc(l.visibility)})</small>` : ""}</li>`).join("")}</ul></article>`;
   }
-  const main = `<div class="page${wide ? " wide" : ""}">${crumb(R, [["Library", ""], [shelf.name, `s/${shelf.id}/`], [g.name, g.url]])}<h1>${esc(d.title)}</h1><div class="meta">${meta.join("")}</div>${body}</div>`;
+  const main = `<div class="page${wide ? " wide" : ""}">${crumb(R, [["Library", ""], [shelf.name, `s/${shelf.id}/`], [g.name, g.url]])}<h1 data-pagefind-meta="title">${esc(d.title)}</h1><span hidden data-pagefind-meta="where">${esc(shelf.name)} · ${esc(g.name)}</span><div class="meta">${meta.join("")}</div>${body}</div>`;
   return { main, toc, wide };
 }
 
@@ -399,7 +437,7 @@ function groupMain(g, R) {
   let head = g.line ? `<p class="lede">${esc(g.line)}</p>` : "";
   if (g.building) {
     const b = g.building;
-    const live = (b.runs || []).map((r) => r.url).filter(Boolean);
+    const live = LIVE.filter((x) => x.path && (x.path === b.path || b.path.startsWith(x.path + "/") || x.path.startsWith(b.path + "/"))).map((x) => x.url);
     head += `<dl class="facts"><dt>District</dt><dd>${esc(g.section)}</dd><dt>State</dt><dd>${esc(b.lifecycle)}</dd>${b.seat ? `<dt>Keeper</dt><dd>${esc(b.seat)}</dd>` : ""}<dt>Where</dt><dd><button class="src" type="button" data-copy="~/SISO_Workspace/${esc(b.path)}">${esc(b.path)}</button></dd>${live.length ? `<dt>Live</dt><dd>${live.map((u) => `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(u.replace(/^https?:\/\//, ""))}</a>`).join(" · ")}</dd>` : ""}${g.mtime ? `<dt>Last doc change</dt><dd>${esc(ago(g.mtime))}</dd>` : ""}</dl>`;
   }
   let body;
@@ -407,7 +445,7 @@ function groupMain(g, R) {
     const roles = ["Start here", "Where it stands", "Specs and plans", "Decisions", "Docs"];
     body = roles.map((r) => { const ds = list.filter((d) => (d.role || "Docs") === r); return ds.length ? `<h2>${r}</h2><div class="rows">${ds.map((d) => docRow(R, d)).join("")}</div>` : ""; }).join("");
   } else body = `<div class="rows">${list.map((d) => docRow(R, d)).join("")}</div>`;
-  return `<div class="page">${crumb(R, [["Library", ""], [shelf.name, `s/${shelf.id}/`]])}<h1>${esc(g.name)}</h1><div class="meta"><span>${list.length} doc${list.length === 1 ? "" : "s"}</span></div>${head}<div data-pagefind-body class="sr">${esc(g.name)} ${esc(g.line || "")}</div>${body}</div>`;
+  return `<div class="page">${crumb(R, [["Library", ""], [shelf.name, `s/${shelf.id}/`]])}<h1 data-pagefind-meta="title">${esc(g.name)}</h1><span hidden data-pagefind-meta="where">${esc(shelf.name)}</span><div class="meta"><span>${list.length} doc${list.length === 1 ? "" : "s"}</span></div>${head}<div data-pagefind-body class="sr">${esc(g.name)} ${esc(g.line || "")}</div>${body}</div>`;
 }
 
 function shelfMain(s, R) {
@@ -419,7 +457,8 @@ function shelfMain(s, R) {
     body = `<div class="chips" data-filter-chips><button type="button" class="on" data-chip="">All ${all.length}</button>${owners.map(([o, n]) => `<button type="button" data-chip="${esc(o)}">${esc(o)} ${n}</button>`).join("")}</div>` +
       gs.slice(0, 60).map((g) => `<h2>${esc(g.name)}</h2><div class="rows">${[...new Set(g.docs.filter(visible))].map((d) => docRow(R, d).replace('class="row"', `class="row" data-owner="${esc(d.owner)}"`)).join("")}</div>`).join("") + (gs.length > 60 ? `<p class="lede">Older days are in search.</p>` : "");
   } else if (s.id === "projects") {
-    body = DISTRICT_ORDER.map((sec) => { const xs = gs.filter((g) => g.section === sec); return xs.length ? `<h2>${sec}</h2><div class="cards">${xs.map((g) => `<a class="card" href="${R(g.url)}"><b>${esc(g.name)}</b><p>${esc(g.line || "")}</p><small>${new Set(g.docs.filter(visible)).size} docs${g.mtime ? " · " + ago(g.mtime) : ""}</small></a>`).join("")}</div>` : ""; }).join("");
+    const live = LIVE.filter((x) => !CLOUD || x.auth !== "local");
+    body = (live.length ? `<h2>Live now</h2><div class="rows">${live.map((x) => `<a class="row" href="${esc(x.url)}" target="_blank" rel="noopener"><span class="t">${esc(x.name)}</span><span class="m">${esc(x.status === "up" ? "up" : x.status || "")}${x.code ? " · " + x.code : ""}</span><span class="s">${esc(x.url.replace(/^https?:\/\//, ""))}${x.deploy ? " · deploy: " + esc(x.deploy) : ""}</span></a>`).join("")}</div>` : "") + DISTRICT_ORDER.map((sec) => { const xs = gs.filter((g) => g.section === sec); return xs.length ? `<h2>${sec}</h2><div class="cards">${xs.map((g) => `<a class="card" href="${R(g.url)}"><b>${esc(g.name)}</b><p>${esc(g.line || "")}</p><small>${new Set(g.docs.filter(visible)).size} docs${g.mtime ? " · " + ago(g.mtime) : ""}</small></a>`).join("")}</div>` : ""; }).join("");
   } else {
     body = `<div class="cards">${gs.map((g) => `<a class="card" href="${R(g.url)}"><b>${esc(g.name)}</b><p>${esc(g.line || [...new Set(g.docs.filter(visible))].slice(0, 3).map((d) => d.title).join(" · "))}</p><small>${new Set(g.docs.filter(visible)).size} docs</small></a>`).join("")}</div>`;
   }
@@ -430,8 +469,9 @@ function homeMain(R) {
   const fresh = docs.filter((d) => visible(d) && (!d.group.private || !CLOUD) && ["pages", "projects", "research"].includes(d.shelf) && d.mtime > NOW - 7 * DAY && d.kind !== "knowledge").sort((a, b) => b.mtime - a.mtime).slice(0, 14);
   const total = new Set(docs.filter(visible)).size;
   return `<div class="page home">
-  <div class="hero"><h1>The Great Library</h1><p class="lede">Everything written for you, everything we know, and everything you can build from: ${total.toLocaleString()} docs on seven shelves. The Estate is the land; this is the building.</p>
+  <div class="hero"><h1>The Great Library</h1><p class="lede">Everything written for you, everything we know, and everything you can build from: ${total.toLocaleString()} docs on ${SHELVES.length} shelves. The Estate is the land; this is the building.</p>
   <button class="bigq" type="button" data-search>${icon("search", 18)}<span>Search every word: specs, pages, packs, insights…</span><kbd>⌘K</kbd></button></div>
+  <div class="stats"><div><b>${shelfCount("pages")}</b><span>pages agents made you</span></div><div><b>${shelfGroups("projects").length}</b><span>live projects, ${shelfCount("projects")} docs</span></div><div><b>${shelfGroups("foundry").reduce((n, g) => n + g.docs.reduce((m, d) => m + (d.items?.length || 0), 0), 0).toLocaleString()}</b><span>Foundry records</span></div><div><b>${shelfGroups("knowledge").reduce((n, g) => n + g.docs.reduce((m, d) => m + (d.items?.length || 0), 0), 0).toLocaleString()}</b><span>ranked insights</span></div></div>
   <div id="starred" class="block" data-starred hidden><h2>${icon("star", 16)} Starred</h2><div class="rows" data-starred-list></div></div>
   <div class="block"><h2>New this week</h2><div class="rows">${fresh.map((d) => docRow(R, d, { group: true })).join("") || '<p class="lede">Nothing new this week.</p>'}</div></div>
   <div class="block"><h2>Shelves</h2><div class="cards">${SHELVES.map((s) => `<a class="card shelf" href="${R(`s/${s.id}/`)}"><b>${icon(s.icon, 18)} ${esc(s.name)}<span>${shelfCount(s.id).toLocaleString()}</span></b><p>${esc(s.line)}</p></a>`).join("")}</div></div>
@@ -443,9 +483,10 @@ function homeMain(R) {
 function write(rel, html) { const p = path.join(OUT, rel); fs.mkdirSync(path.dirname(p), { recursive: true }); fs.writeFileSync(p, html); }
 function stripBigData(h) { return h.replace(/(["'(])data:image\/[a-z+]+;base64,[A-Za-z0-9+/=]{300000,}/g, '$1data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22320%22 height=%2290%22%3E%3Crect width=%22100%25%22 height=%22100%25%22 fill=%22%23222%22/%3E%3Ctext x=%2216%22 y=%2250%22 fill=%22%23999%22 font-family=%22sans-serif%22 font-size=%2214%22%3EImage kept on the laptop%3C/text%3E%3C/svg%3E'); }
 
-function main() {
+async function main() {
   const t0 = Date.now();
-  collectPages(); collectResearch(); collectProjects(); collectIndustries(); collectKnowledge(); collectBanks(); collectWorks();
+  await collectLive();
+  collectPages(); collectResearch(); collectFoundry(); collectProjects(); collectIndustries(); collectKnowledge(); collectBanks(); collectWorks();
   fs.rmSync(OUT, { recursive: true, force: true }); // OUT is this build's own output folder, regenerated every run
   fs.mkdirSync(path.join(OUT, "assets"), { recursive: true });
   for (const f of ["library.css", "library.js"]) fs.copyFileSync(path.join(HERE, "src", f), path.join(OUT, "assets", f));
