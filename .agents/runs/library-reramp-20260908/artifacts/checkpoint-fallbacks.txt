@@ -1,2 +1,0 @@
-### Result
-[{"mode":"nojs","width":390,"scroll":390,"navVisible":true,"main":1},{"mode":"storage-denied","width":390,"scroll":390,"navVisible":true,"main":1},{"mode":"final-mobile","width":390,"scroll":390,"cardMin":"0px"}]

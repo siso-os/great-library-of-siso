@@ -1,2 +1,0 @@
-### Result
-{"mobile":{"width":390,"scroll":410,"rail":20},"collapsed":{"state":"true","width":20},"search":true,"focus":"siso-sidebar__toggle"}
