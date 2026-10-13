@@ -1,0 +1,16 @@
+{
+  "name": "siso-library-reader",
+  "private": true,
+  "type": "module",
+  "description": "The private Library reader: one static build over the shelves, served in Agent Base and on a private Cloudflare Worker.",
+  "scripts": {
+    "build": "node build.mjs",
+    "build:cloud": "node build.mjs --cloud",
+    "deploy": "node build.mjs --cloud && ../../../../../Great_Library_of_SISO/node_modules/.bin/wrangler deploy -c deploy/wrangler.toml --assets ../../../../great-library/reader-dist-cloud"
+  },
+  "dependencies": {
+    "markdown-it": "15.0.2",
+    "markdown-it-anchor": "10.0.0",
+    "pagefind": "1.5.2"
+  }
+}

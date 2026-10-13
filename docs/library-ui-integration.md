@@ -1,5 +1,8 @@
 # Library reading and operating integration
 
+> **Superseded, 9 Oct 2026.** The Library people read is now the reader in [`reader/`](../reader/README.md) (spec: [`reader/SPEC.html`](../reader/SPEC.html)): every doc on shelves with search, inside Agent Base's Estate and on a private Worker. This file is the September record for the older public site; its links and evidence still hold.
+
+
 This review branch connects the existing registry and readers to the shared CRM
 shell and read-only `gls` discovery. Local implementation, selected source and a
 production deployment remain separate observations. Public publication requires
