@@ -1,0 +1,29 @@
+{
+  "schema": "siso-toolchain-offline-checks/1",
+  "date": "2026-10-18",
+  "scope": "Synthetic temporary data only; no corpus hydration or production operations",
+  "checks": [
+    {
+      "command": "sh library/librarian/check.sh",
+      "exit_code": 0,
+      "tests_passed": 3
+    },
+    {
+      "command": "gitleaks dir library/librarian --redact --no-banner",
+      "exit_code": 0,
+      "findings": 0
+    }
+  ],
+  "receipt_verification": "Original Git blob IDs and SHA-256s reconstructed offline; adapted target SHA-256s and exact file allowlist verified",
+  "scope_limits": [
+    "Commit and branch push only; parent owns landing.",
+    "Full monorepo suite and runtime adoption not claimed."
+  ],
+  "storage": {
+    "lane_allocated_kib_observed": 2072,
+    "scratch_allocated_kib_observed": 5372,
+    "available_kib_observed": 30478824,
+    "allocation_limit_bytes": 1000000000,
+    "operational_floor_bytes": 16106127360
+  }
+}

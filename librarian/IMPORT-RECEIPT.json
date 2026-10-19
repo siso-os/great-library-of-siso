@@ -1,0 +1,3808 @@
+{
+  "schema": "siso-selected-toolchain-import/1",
+  "source_repo": "sisodias/siso-librarian",
+  "source_pin": "980691fc98662834a742b84c132e1def799ad74e",
+  "target": "library/librarian",
+  "base_commit": "1e21fb744c52f196d6ac6fcc9ab35e6cb281699f",
+  "source_license": "MIT; original LICENSE preserved verbatim",
+  "scope": "Offline authored toolchain closure only; no corpus hydration, deployment, runtime adoption or full split-repository migration claimed.",
+  "files": [
+    {
+      "path": "LICENSE",
+      "blob": "4cc782a794b6af6ef565d0e5b2c0f4508180202e",
+      "mode": "100644",
+      "bytes": 1071,
+      "source_sha256": "f2e87216f04548b39545f947e12ed88694c4915aa540d6959c0f911fa2151a9f",
+      "target_path": "LICENSE",
+      "target_sha256": "f2e87216f04548b39545f947e12ed88694c4915aa540d6959c0f911fa2151a9f",
+      "adaptation": "none; byte-identical",
+      "existing_main_blob_paths": [
+        "library/banks/siso-shell/LICENSE",
+        "library/banks/siso-ui-base/LICENSE",
+        "library/knowledge/app/LICENSE",
+        "library/people-graph/LICENSE",
+        "library/works/erdos/siso-unsolveable-mathematics/LICENSE",
+        "platform/ui/design-system/LICENSE"
+      ],
+      "reuse_decision": "No compatible existing runtime implementation at target; license may match other modules."
+    },
+    {
+      "path": "scripts/add-longs-variants.mjs",
+      "blob": "19128fd67d3eb601f7434caafc3c9648c49b0a39",
+      "mode": "100644",
+      "bytes": 9017,
+      "source_sha256": "bb7db51b8453e515c7b06e9e5aa0cb185b6259a704e7b78c994be35e0f13d8ac",
+      "target_path": "scripts/add-longs-variants.mjs",
+      "target_sha256": "ea4bb94237c524fac46437d7da53700baa2612618d55fdf9bfde450b63aeff83",
+      "adaptation": "Add DICT_PATH override for offline synthetic dictionary; preserve existing OS default and conversion algorithm.",
+      "existing_main_blob_paths": [],
+      "reuse_decision": "No compatible existing runtime implementation at target; license may match other modules.",
+      "adaptation_patch": "--- source/scripts/add-longs-variants.mjs\n+++ target/scripts/add-longs-variants.mjs\n@@ -29,7 +29,7 @@\n import { corpusDb } from './lib/vault-paths.mjs';\n \n const DB = corpusDb();\n-const DICT = '/usr/share/dict/words';\n+const DICT = process.env.DICT_PATH || '/usr/share/dict/words';\n const check = process.argv.includes('--check');\n const resume = process.argv.includes('--resume');\n // SQL goes on STDIN, not argv. Measured 2026-08-04: a 2,000-row insert of full\n",
+      "adaptation_hunks": [
+        {
+          "target_start": 31,
+          "target_end": 32,
+          "source_lines": [
+            "const DICT = '/usr/share/dict/words';\n"
+          ],
+          "target_lines": [
+            "const DICT = process.env.DICT_PATH || '/usr/share/dict/words';\n"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "scripts/build-external-passages.mjs",
+      "blob": "a5a42dc1274161dfbcbba046a65916a773a6eb3c",
+      "mode": "100644",
+      "bytes": 13183,
+      "source_sha256": "0a140ca87152464433bda328448412d2c138eed6801eb920ca146f2a17bc82e3",
+      "target_path": "scripts/build-external-passages.mjs",
+      "target_sha256": "d38c4432469a149df4fca33c92ce9a4d00569bffe4d9edfece266a0ebc8f13a9",
+      "adaptation": "Use shared explicit text/index/catalogue path resolution instead of separate defaults; indexing algorithm unchanged.",
+      "existing_main_blob_paths": [],
+      "reuse_decision": "No compatible existing runtime implementation at target; license may match other modules.",
+      "adaptation_patch": "--- source/scripts/build-external-passages.mjs\n+++ target/scripts/build-external-passages.mjs\n@@ -25,20 +25,19 @@\n //   build-external-passages.mjs --check   report what is indexed\n import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs';\n import { execFileSync } from 'node:child_process';\n-import { vaultRoot } from './lib/vault-paths.mjs';\n+import { corpusDb, textDir, booksDb } from './lib/vault-paths.mjs';\n import { isNotABook } from './lib/selection-rules.mjs';\n import { join, basename } from 'node:path';\n \n-const VAULT = vaultRoot();\n-const TEXT = join(VAULT, 'ia-ingest', 'text');\n-const OUT = join(VAULT, 'ia-ingest', 'external-passages.sqlite');\n+const TEXT = textDir();\n+const OUT = corpusDb();\n // BOOKS_DB, so this can be pointed at a fixture. Measured 2026-08-06: the\n // catalogue path was hardcoded here while seven other builders had already been\n // moved to lib/vault-paths.mjs for exactly this reason — and it bit immediately.\n // A fixture test of the new correspondence skip reported \"0 skipped\" because the\n // fixture had no book_external rows to supply titles, and the builder read the\n // real catalogue instead of the one under test.\n-const BOOKS = process.env.BOOKS_DB || `${process.env.HOME}/foundry-data/domains/books/books.sqlite`;\n+const BOOKS = booksDb();\n const check = process.argv.includes('--check');\n \n // BUSY TIMEOUT. Measured 2026-08-06: no script in this pipeline waited for a\n",
+      "adaptation_hunks": [
+        {
+          "target_start": 27,
+          "target_end": 28,
+          "source_lines": [
+            "import { vaultRoot } from './lib/vault-paths.mjs';\n"
+          ],
+          "target_lines": [
+            "import { corpusDb, textDir, booksDb } from './lib/vault-paths.mjs';\n"
+          ]
+        },
+        {
+          "target_start": 31,
+          "target_end": 33,
+          "source_lines": [
+            "const VAULT = vaultRoot();\n",
+            "const TEXT = join(VAULT, 'ia-ingest', 'text');\n",
+            "const OUT = join(VAULT, 'ia-ingest', 'external-passages.sqlite');\n"
+          ],
+          "target_lines": [
+            "const TEXT = textDir();\n",
+            "const OUT = corpusDb();\n"
+          ]
+        },
+        {
+          "target_start": 39,
+          "target_end": 40,
+          "source_lines": [
+            "const BOOKS = process.env.BOOKS_DB || `${process.env.HOME}/foundry-data/domains/books/books.sqlite`;\n"
+          ],
+          "target_lines": [
+            "const BOOKS = booksDb();\n"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "scripts/corpus-integrity.mjs",
+      "blob": "471ac757939449cf9ab7eec8923a0559368cf579",
+      "mode": "100644",
+      "bytes": 11852,
+      "source_sha256": "fea91ad88452fcdd0506cc7eb03eb107b9a6f576eaa6fd50e8712446c3048829",
+      "target_path": "scripts/corpus-integrity.mjs",
+      "target_sha256": "48728af9023e543bcaa39512692744f1d17e6c03b95f77255263c5cced401a68",
+      "adaptation": "Use shared explicit corpus path resolution and DICT_PATH override; preserve upstream skip reporting and duplicate checks.",
+      "existing_main_blob_paths": [],
+      "reuse_decision": "No compatible existing runtime implementation at target; license may match other modules.",
+      "adaptation_patch": "--- source/scripts/corpus-integrity.mjs\n+++ target/scripts/corpus-integrity.mjs\n@@ -23,11 +23,12 @@\n import { existsSync, readFileSync } from 'node:fs';\n import { execFileSync } from 'node:child_process';\n import { createHash } from 'node:crypto';\n+import { corpusDb } from './lib/vault-paths.mjs';\n \n // Overridable so this can be tested against a fixture. A check that can only\n // run against the real corpus cannot be proven to detect anything — the same\n // defect as a self-test that exercises sqlite instead of the script.\n-const DB = process.env.CORPUS_DB || '/Volumes/SISO-STORAGE-VAULT/SISO-VAULT/librarian-vault/ia-ingest/external-passages.sqlite';\n+const DB = corpusDb();\n if (!existsSync(DB)) {\n   // The corpus lives on external storage that is legitimately absent sometimes.\n   // This gate is in the verify chain, so exiting non-zero here would block EVERY\n@@ -113,7 +114,7 @@\n // Reported, not fatal. A German medical-history journal is a legitimate book\n // that the SELECTION let in; deciding whether the Library wants non-English\n // material is not a decision this gate should make.\n-const dictPath = '/usr/share/dict/words';\n+const dictPath = process.env.DICT_PATH || '/usr/share/dict/words';\n let language = { checked: false, reason: 'no dictionary at /usr/share/dict/words' };\n if (existsSync(dictPath)) {\n   const dict = new Set(readFileSync(dictPath, 'utf8').split('\\n').map((w) => w.trim().toLowerCase()).filter(Boolean));\n",
+      "adaptation_hunks": [
+        {
+          "target_start": 25,
+          "target_end": 26,
+          "source_lines": [],
+          "target_lines": [
+            "import { corpusDb } from './lib/vault-paths.mjs';\n"
+          ]
+        },
+        {
+          "target_start": 30,
+          "target_end": 31,
+          "source_lines": [
+            "const DB = process.env.CORPUS_DB || '/Volumes/SISO-STORAGE-VAULT/SISO-VAULT/librarian-vault/ia-ingest/external-passages.sqlite';\n"
+          ],
+          "target_lines": [
+            "const DB = corpusDb();\n"
+          ]
+        },
+        {
+          "target_start": 116,
+          "target_end": 117,
+          "source_lines": [
+            "const dictPath = '/usr/share/dict/words';\n"
+          ],
+          "target_lines": [
+            "const dictPath = process.env.DICT_PATH || '/usr/share/dict/words';\n"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "scripts/lib/claim-paths.mjs",
+      "blob": "62461e45b3090037b9f768a3361f16ab21c9312c",
+      "mode": "100644",
+      "bytes": 4705,
+      "source_sha256": "13435eedd813cb50ce5fbe2fb93e029f7a2dda33615375750a3eafc935db5c31",
+      "target_path": "scripts/lib/claim-paths.mjs",
+      "target_sha256": "13435eedd813cb50ce5fbe2fb93e029f7a2dda33615375750a3eafc935db5c31",
+      "adaptation": "none; byte-identical",
+      "existing_main_blob_paths": [],
+      "reuse_decision": "No compatible existing runtime implementation at target; license may match other modules."
+    },
+    {
+      "path": "scripts/lib/selection-rules.mjs",
+      "blob": "45199e630a4c5b6d87cb516f28de223bd2619c9d",
+      "mode": "100644",
+      "bytes": 7357,
+      "source_sha256": "70d06d11a19dd08a3c2dea943d04779c1065d498810223f7e27acc68ddf4043e",
+      "target_path": "scripts/lib/selection-rules.mjs",
+      "target_sha256": "70d06d11a19dd08a3c2dea943d04779c1065d498810223f7e27acc68ddf4043e",
+      "adaptation": "none; byte-identical",
+      "existing_main_blob_paths": [],
+      "reuse_decision": "No compatible existing runtime implementation at target; license may match other modules."
+    },
+    {
+      "path": "scripts/lib/vault-paths.mjs",
+      "blob": "1f549036d1d95705aca69d020d91021609f57774",
+      "mode": "100644",
+      "bytes": 2769,
+      "source_sha256": "61c19360803a6470aa837503fb4cc75a2a0808b0584a9381f577143b91e142b0",
+      "target_path": "scripts/lib/vault-paths.mjs",
+      "target_sha256": "6bcae4ad5c27b1a75f6cbeecc0815c5e8d40fc21496930f410b06864fa30112a",
+      "adaptation": "Replace machine-specific vault/catalogue defaults with required explicit configuration; resolve relative overrides and encode read-only SQLite file URIs.",
+      "existing_main_blob_paths": [],
+      "reuse_decision": "No compatible existing runtime implementation at target; license may match other modules.",
+      "adaptation_patch": "--- source/scripts/lib/vault-paths.mjs\n+++ target/scripts/lib/vault-paths.mjs\n@@ -26,32 +26,42 @@\n //   VAULT_ROOT=/tmp/fixture node scripts/whatever.mjs\n //   CORPUS_DB=/tmp/copy.db  node scripts/whatever.mjs   (overrides just the index)\n \n-const DEFAULT_VAULT = '/Volumes/SISO-STORAGE-VAULT/SISO-VAULT/librarian-vault';\n+import { resolve } from 'node:path';\n+import { pathToFileURL } from 'node:url';\n+\n+function configured(name) {\n+  const value = process.env[name]?.trim();\n+  return value ? resolve(value) : null;\n+}\n \n // VAULT_ROOT redirects everything below it; the narrower vars override one path\n // each. Narrow beats broad, so a test can move the corpus index without moving\n // the ingest directory.\n export function vaultRoot() {\n-  return process.env.VAULT_ROOT || DEFAULT_VAULT;\n+  const root = configured('VAULT_ROOT');\n+  if (!root) throw new Error('set VAULT_ROOT to an external vault or CORPUS_DB to an existing index; no bundled corpus is provided');\n+  return root;\n }\n \n export function ingestDir() {\n-  return process.env.INGEST_DIR || `${vaultRoot()}/ia-ingest`;\n+  return configured('INGEST_DIR') || `${vaultRoot()}/ia-ingest`;\n }\n \n export function corpusDb() {\n-  return process.env.CORPUS_DB || `${ingestDir()}/external-passages.sqlite`;\n+  return configured('CORPUS_DB') || `${ingestDir()}/external-passages.sqlite`;\n }\n \n export function textDir() {\n-  return process.env.TEXT_DIR || `${ingestDir()}/text`;\n+  return configured('TEXT_DIR') || `${ingestDir()}/text`;\n }\n \n // The catalogue is NOT on the vault — it is the Library's own database on the\n // internal disk. Included here because the same tests need to redirect it, and\n // having two modules for \"where things are\" is how they drift apart.\n export function booksDb() {\n-  return process.env.BOOKS_DB || `${process.env.HOME}/foundry-data/domains/books/books.sqlite`;\n+  const db = configured('BOOKS_DB');\n+  if (!db) throw new Error('set BOOKS_DB to the external catalogue; no bundled catalogue is provided');\n+  return db;\n }\n \n // A read-only URI. immutable=1 for archives specifically: they are snapshots\n@@ -59,5 +69,5 @@\n // creating a -shm sidecar beside it. NOT applied to live databases, where it\n // would let a reader see a stale page and agree with a number that has moved.\n export function readOnlyUri(path, { archived = false } = {}) {\n-  return archived ? `file:${path}?mode=ro&immutable=1` : `file:${path}?mode=ro`;\n+  return archived ? `${pathToFileURL(resolve(path)).href}?mode=ro&immutable=1` : `${pathToFileURL(resolve(path)).href}?mode=ro`;\n }\n",
+      "adaptation_hunks": [
+        {
+          "target_start": 28,
+          "target_end": 35,
+          "source_lines": [
+            "const DEFAULT_VAULT = '/Volumes/SISO-STORAGE-VAULT/SISO-VAULT/librarian-vault';\n"
+          ],
+          "target_lines": [
+            "import { resolve } from 'node:path';\n",
+            "import { pathToFileURL } from 'node:url';\n",
+            "\n",
+            "function configured(name) {\n",
+            "  const value = process.env[name]?.trim();\n",
+            "  return value ? resolve(value) : null;\n",
+            "}\n"
+          ]
+        },
+        {
+          "target_start": 40,
+          "target_end": 43,
+          "source_lines": [
+            "  return process.env.VAULT_ROOT || DEFAULT_VAULT;\n"
+          ],
+          "target_lines": [
+            "  const root = configured('VAULT_ROOT');\n",
+            "  if (!root) throw new Error('set VAULT_ROOT to an external vault or CORPUS_DB to an existing index; no bundled corpus is provided');\n",
+            "  return root;\n"
+          ]
+        },
+        {
+          "target_start": 46,
+          "target_end": 47,
+          "source_lines": [
+            "  return process.env.INGEST_DIR || `${vaultRoot()}/ia-ingest`;\n"
+          ],
+          "target_lines": [
+            "  return configured('INGEST_DIR') || `${vaultRoot()}/ia-ingest`;\n"
+          ]
+        },
+        {
+          "target_start": 50,
+          "target_end": 51,
+          "source_lines": [
+            "  return process.env.CORPUS_DB || `${ingestDir()}/external-passages.sqlite`;\n"
+          ],
+          "target_lines": [
+            "  return configured('CORPUS_DB') || `${ingestDir()}/external-passages.sqlite`;\n"
+          ]
+        },
+        {
+          "target_start": 54,
+          "target_end": 55,
+          "source_lines": [
+            "  return process.env.TEXT_DIR || `${ingestDir()}/text`;\n"
+          ],
+          "target_lines": [
+            "  return configured('TEXT_DIR') || `${ingestDir()}/text`;\n"
+          ]
+        },
+        {
+          "target_start": 61,
+          "target_end": 64,
+          "source_lines": [
+            "  return process.env.BOOKS_DB || `${process.env.HOME}/foundry-data/domains/books/books.sqlite`;\n"
+          ],
+          "target_lines": [
+            "  const db = configured('BOOKS_DB');\n",
+            "  if (!db) throw new Error('set BOOKS_DB to the external catalogue; no bundled catalogue is provided');\n",
+            "  return db;\n"
+          ]
+        },
+        {
+          "target_start": 71,
+          "target_end": 72,
+          "source_lines": [
+            "  return archived ? `file:${path}?mode=ro&immutable=1` : `file:${path}?mode=ro`;\n"
+          ],
+          "target_lines": [
+            "  return archived ? `${pathToFileURL(resolve(path)).href}?mode=ro&immutable=1` : `${pathToFileURL(resolve(path)).href}?mode=ro`;\n"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "scripts/search-library.mjs",
+      "blob": "1f5aecdd804fd82ead248ee15c4b3881616e19fd",
+      "mode": "100644",
+      "bytes": 12904,
+      "source_sha256": "2d63adb51237fe4324217b029cfd79f12ffff7cd4bceb72db35dc7aae4878297",
+      "target_path": "scripts/search-library.mjs",
+      "target_sha256": "59203cf11f32f1235648b242f54b57c616fc0db5ee5abff110b8ebd26f0efda0",
+      "adaptation": "Clean configuration exit 70, encoded read-only URI, explicit missing-modern warning/error, positive-integer limit and malformed-FTS exits; direct CLI hints replace unavailable npm scripts.",
+      "existing_main_blob_paths": [],
+      "reuse_decision": "No compatible existing runtime implementation at target; license may match other modules.",
+      "adaptation_patch": "--- source/scripts/search-library.mjs\n+++ target/scripts/search-library.mjs\n@@ -19,9 +19,13 @@\n //   search-library.mjs --stats                  what is searchable\n import { existsSync } from 'node:fs';\n import { execFileSync } from 'node:child_process';\n-import { corpusDb } from './lib/vault-paths.mjs';\n-\n-const DB = corpusDb();\n+import { corpusDb, readOnlyUri } from './lib/vault-paths.mjs';\n+\n+let DB;\n+try { DB = corpusDb(); } catch (err) {\n+  console.error(`index not configured: ${err.message}`);\n+  process.exit(70);\n+}\n const args = process.argv.slice(2);\n const flag = (f) => args.includes(f);\n const val = (f, d) => { const i = args.indexOf(f); return i >= 0 && args[i + 1] ? args[i + 1] : d; };\n@@ -38,7 +42,7 @@\n     // A reader hitting the page during an ingest cycle would conclude search is\n     // broken. -cmd '.timeout' makes sqlite retry for 5s instead of failing at\n     // once, which covers the brief windows between the writer's commits.\n-    return execFileSync('sqlite3', ['-cmd', '.timeout 5000', `file:${DB}?mode=ro`], { input: sql, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 }).trim();\n+    return execFileSync('sqlite3', ['-cmd', '.timeout 5000', readOnlyUri(DB)], { input: sql, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 }).trim();\n   } catch (err) {\n     // A MALFORMED QUERY IS THE READER'S TYPO, NOT A CRASH. Measured 2026-08-06:\n     // searching `'; drop table book_ext;--` produced a Node stack trace. The\n@@ -46,7 +50,7 @@\n     // the string as invalid grammar — but a search tool that dies on a stray\n     // quote tells the reader nothing about what to fix.\n     const msg = String(err?.stderr || err?.message || '');\n-    const m = msg.match(/fts5: (.+)/);\n+    const m = msg.match(/fts5: (.+)/) || msg.match(/(unterminated string)/i);\n     if (m) {\n       console.error(`not a valid search expression: ${m[1].trim()}`);\n       console.error('FTS5 syntax: bare words, \"quoted phrases\", AND / OR / NOT, NEAR(a b).');\n@@ -71,7 +75,7 @@\n     union all select 'words', coalesce((select v from corpus_stats where k='words'),-1)\n     union all select 'with_headings', coalesce((select v from corpus_stats where k='with_headings'),-1)\n     ${hasModern ? \"union all select 'long_s_passages', coalesce((select v from modern_stats where k='changed'),-1)\" : ''};`));\n-  if (!hasModern) console.error('note: passage_modern absent — run npm run books:longs-variants. long-s counts omitted, NOT zero.');\n+  if (!hasModern) console.error('note: passage_modern absent — run node scripts/add-longs-variants.mjs. long-s counts omitted, NOT zero.');\n   process.exit(0);\n }\n \n@@ -81,8 +85,20 @@\n }\n \n const limit = Number(val('--limit', '8'));\n+if (!Number.isSafeInteger(limit) || limit < 1) {\n+  console.error('--limit must be a positive integer');\n+  process.exit(64);\n+}\n const useOriginal = !flag('--modern');\n let useModern = !flag('--original');\n+if (useModern && !hasModern) {\n+  if (flag('--modern')) {\n+    console.error('modern index unavailable; build it with node scripts/add-longs-variants.mjs');\n+    process.exit(70);\n+  }\n+  console.error('note: modern index unavailable; searching printed text only');\n+  useModern = false;\n+}\n // Escape single quotes for SQL. FTS5 operators (AND/OR/NEAR/quotes) pass\n // through deliberately — this is a search tool, not a sanitised form field.\n const q = query.replace(/'/g, \"''\");\n",
+      "adaptation_hunks": [
+        {
+          "target_start": 21,
+          "target_end": 22,
+          "source_lines": [
+            "import { corpusDb } from './lib/vault-paths.mjs';\n"
+          ],
+          "target_lines": [
+            "import { corpusDb, readOnlyUri } from './lib/vault-paths.mjs';\n"
+          ]
+        },
+        {
+          "target_start": 23,
+          "target_end": 28,
+          "source_lines": [
+            "const DB = corpusDb();\n"
+          ],
+          "target_lines": [
+            "let DB;\n",
+            "try { DB = corpusDb(); } catch (err) {\n",
+            "  console.error(`index not configured: ${err.message}`);\n",
+            "  process.exit(70);\n",
+            "}\n"
+          ]
+        },
+        {
+          "target_start": 44,
+          "target_end": 45,
+          "source_lines": [
+            "    return execFileSync('sqlite3', ['-cmd', '.timeout 5000', `file:${DB}?mode=ro`], { input: sql, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 }).trim();\n"
+          ],
+          "target_lines": [
+            "    return execFileSync('sqlite3', ['-cmd', '.timeout 5000', readOnlyUri(DB)], { input: sql, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 }).trim();\n"
+          ]
+        },
+        {
+          "target_start": 52,
+          "target_end": 53,
+          "source_lines": [
+            "    const m = msg.match(/fts5: (.+)/);\n"
+          ],
+          "target_lines": [
+            "    const m = msg.match(/fts5: (.+)/) || msg.match(/(unterminated string)/i);\n"
+          ]
+        },
+        {
+          "target_start": 77,
+          "target_end": 78,
+          "source_lines": [
+            "  if (!hasModern) console.error('note: passage_modern absent — run npm run books:longs-variants. long-s counts omitted, NOT zero.');\n"
+          ],
+          "target_lines": [
+            "  if (!hasModern) console.error('note: passage_modern absent — run node scripts/add-longs-variants.mjs. long-s counts omitted, NOT zero.');\n"
+          ]
+        },
+        {
+          "target_start": 87,
+          "target_end": 91,
+          "source_lines": [],
+          "target_lines": [
+            "if (!Number.isSafeInteger(limit) || limit < 1) {\n",
+            "  console.error('--limit must be a positive integer');\n",
+            "  process.exit(64);\n",
+            "}\n"
+          ]
+        },
+        {
+          "target_start": 93,
+          "target_end": 101,
+          "source_lines": [],
+          "target_lines": [
+            "if (useModern && !hasModern) {\n",
+            "  if (flag('--modern')) {\n",
+            "    console.error('modern index unavailable; build it with node scripts/add-longs-variants.mjs');\n",
+            "    process.exit(70);\n",
+            "  }\n",
+            "  console.error('note: modern index unavailable; searching printed text only');\n",
+            "  useModern = false;\n",
+            "}\n"
+          ]
+        }
+      ]
+    }
+  ],
+  "excluded": [
+    {
+      "path": ".githooks/pre-push",
+      "blob": "07a06a1f350a522aee404765d90f5d8d5dff11d2",
+      "mode": "100755",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": ".github/assets/cover.png",
+      "blob": "42b8bf7bf94dd373d394ad59daad5d14c54d6119",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": ".github/assets/logo.png",
+      "blob": "745d4e56af203e3ec7e929db90e398a3063d72dc",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": ".github/assets/preview.gif",
+      "blob": "232cc66b0942aea537176d9e7b04188acc8a7a6c",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": ".gitignore",
+      "blob": "333c1e910a3e2bef1b9d0d4587392627d8388974",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "CHARTER.md",
+      "blob": "256cd3437d8318c4bedfd07683909d6276f8d897",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "DECISIONS.md",
+      "blob": "659a3692ead25c17b3c2fb59d4f9136bbe04ff8d",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "FLEET-BRIEF.txt",
+      "blob": "cd5cc85fe83baefec02f8d21e182089a5f45f4e1",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "HANDOVER-BRIEF.txt",
+      "blob": "6b23f8ea91cc3913bdca7b6a33bd5642fb2cf437",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "HANDOVER-NEXT.md",
+      "blob": "f395b72cc0dd888247fc7a8a27d5e12b33a25dcd",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "HANDOVER.md",
+      "blob": "00867c57e16d7fb75d2f1684cee0b40e8b2cf5b0",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "OPERATIONS.md",
+      "blob": "1eabf5db214fcdf690226dbb68046e24b339f608",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "README.md",
+      "blob": "f570753f179470b133875ab50e96b95314a62430",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "REVIEW-PACKET.md",
+      "blob": "b935c0ed1a54cca73ddcb46d2947bcb292c792c6",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "SOURCES.md",
+      "blob": "6db37141c208fcd5644aa936c8b08890f37eea3e",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "VISION.md",
+      "blob": "5fd5170cd33e501eb52965f72f74704d6208b06b",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "claims/GQ-001-enforcement-limits.claim.json",
+      "blob": "763cea31ebdb0ce95c97ee4f0041a1eb5823b973",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "claims/GQ-001-enforcement-limits.v2.claim.json",
+      "blob": "222727ce1398231bb50fe0757e1d72631f72c734",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "claims/GQ-002-caching-multiplier.claim.json",
+      "blob": "d97d3102fde43fd8aa6b54237c5bed3216034baf",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "claims/GQ-004-pi-primitive.claim.json",
+      "blob": "d3ce9b74ae183a59adcce8d56686c9360f99597c",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "claims/GQ-005-category-momentum.claim.json",
+      "blob": "88997aa164f8a1f51d8ccd105ffe9109e19639ad",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "claims/GQ-006-organ-push-verb.claim.json",
+      "blob": "d6aae2a4fae013d3ce93de38027be839e77bbdc6",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "claims/GQ-008-routing-cache-economics.claim.json",
+      "blob": "6c3cffcfe526e82240b9609098652fccde5a826a",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "claims/GQ-008-routing-cache-economics.v2.claim.json",
+      "blob": "8a3ad31f6494ff814c8f8e435d24170d1f26f840",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "claims/GQ-009-claim-layer-contract.claim.json",
+      "blob": "65bb519026af13728f680a544e3b642a80557c20",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "claims/GQ-009-claim-layer-contract.v2.claim.json",
+      "blob": "d4b6b6ab6b7668c33f1d8d4444876576b849ccb6",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "claims/GQ-010-fame-vs-dependence.claim.json",
+      "blob": "c0b2ec58c65896f171722e78e137ed63f2ddd20e",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "examples/invalid-claim-packet.json",
+      "blob": "fd521833f173f9641656304f5aca59c24513f39a",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "examples/valid-claim-packet.json",
+      "blob": "28f8fbc1d77d85d83d33d0c1ee4afa97043c140c",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "metrics/2026-08-03-awesome-signal-canonical-promotion.json",
+      "blob": "dc34de4a422a348d5d3cc533c612f01d64a2274b",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-03-awesome-signal-staging.json",
+      "blob": "2537a3cdb27477b92fa0295c19301b31083da250",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-03-cached-minimax-runner.json",
+      "blob": "cd1aa627c83b6bab351129fce2eed63e332967d4",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-03-ia-adapter-contract.json",
+      "blob": "9bc222ef31980c51c9d1430ac2e05fa35186555f",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-03-ia-contract-live-findings.json",
+      "blob": "a8bcd5f3ac476abc1c498c905a5b007e57dc1f6a",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-03-ia-live-metadata-probe-combined.json",
+      "blob": "54daf5b2ad3fc0185b38d52ab132e6bd05068d0f",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-03-ia-live-metadata-probe.json",
+      "blob": "c3d4c669810d0baebdc4ccc1e9473518cf0697f4",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-03-mac-mini-settlement.json",
+      "blob": "4952287504b82ffa707eb9c70c67c86a4c8a5a65",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-03-minimax-cache-control.json",
+      "blob": "0f0c058c5fe1d9716eb540f7aa3aa79bff5bcb57",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-03-minimax-fleet-ab.json",
+      "blob": "d771e18317135284028de67dec700b6ac6e0c3b8",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-03-minimax-routing-repair.json",
+      "blob": "ab7532d3bb5d2c6e11ae53c4e879d78e4ee755a4",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-03-mm-bulk-runner-smoke.jsonl",
+      "blob": "199cb969c77fec02584c5e63fff112ebdf964ac6",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-03-observatory-first-page.json",
+      "blob": "84e77b8b133f72e6c938bb485a04928df09a7608",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-03-passage-index-vault-backup.json",
+      "blob": "b81fab16d450a9ece2fcd93f55635e3709de2f51",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-03-question-portfolio-index.json",
+      "blob": "4c64d7741018b6a44ea43c60510e51fd63d8b52b",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-03-refresh-invalidation-ledger.json",
+      "blob": "9490e7c9507f59e713434d99dfdcda5a250ca691",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-a-guard-that-could-not-see.json",
+      "blob": "c41bf7e5e3f2dbfd27c91b22f9a44752eb93ed3d",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-a-route-that-exists.json",
+      "blob": "bc351fa7441956dd42906a2122f0a0944818d3c4",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-all-six-censused.json",
+      "blob": "e99cf45cdfbd3fcbf29a79ba02589516350e1f00",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-asserted-number-audit.json",
+      "blob": "c395e3ef0a27a8f74aa2f91ae5bbfd7e70464bc8",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-author-value-rescued.json",
+      "blob": "824b2736a0cc37163cc4b2c19a184a141c98dece",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-backup-survey-complete.json",
+      "blob": "20cc8cc7d3af075d6dffb0455646c50f6713f792",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-bifrost-content-logging-flag.json",
+      "blob": "8e0e5562a862ddf8d4dc964427616182f1cea307",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-bifrost-log-growth.json",
+      "blob": "ac87aa5d486cc4bbb5daf6d141724d1c0d2e24d5",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-bifrost-log-vaulted.json",
+      "blob": "7c4558236e8790156317e373e66b04298389d410",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-bifrost-stores-bodies-twice.json",
+      "blob": "51fa059d74c234fdb2d94f875174f72d3f03bb77",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-books-catalogue-vaulted.json",
+      "blob": "125585cdfc78ac70f66d2002ee03f5f2283e9f56",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-catalogue-spans-two-sources.json",
+      "blob": "127bbcdedb4fb38788eb0dba6777ec193e7e75b2",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-category-momentum-is-one-repo.json",
+      "blob": "f70f7d06fa1f49cbdd515a92445404ac4bd867ed",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-census-not-estimate.json",
+      "blob": "cd0099241148d0cecd0bd1438a36deef30062966",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-channel-reliability.json",
+      "blob": "7ca84a79eb52c0610dbe1ea53e542749f9e04efe",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-claim-paths-helper.json",
+      "blob": "9bd53afabc319215bb58457a39e7d54fa45ec19a",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-context-compounding-projection.json",
+      "blob": "a82e77ae68f9667f8445fc7fe0dac68f92ce8e5e",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-copyright-deferral-tested.json",
+      "blob": "d080641467894ec2726135f4149498afeba486e4",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-decision-queue-audit.json",
+      "blob": "d378d7d0cf1a4f1993bb6847ad1715dbb83a89f9",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-decision1-reverified.json",
+      "blob": "b28ab33b4e977384c775d8a1748aab9a2a3a5fad",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-decision2-fallback-verified.json",
+      "blob": "6581b010db260cfee78f6bf3e71efd983820cb2f",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-decision4-holds.json",
+      "blob": "336cac89c54ebe587e149c50801ee0a0041f9110",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-decisions-invisible-on-the-page.json",
+      "blob": "cc94257c5255e383a568733cb03e3472579b7566",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-declaring-a-reproducer.json",
+      "blob": "3095f9f63d7715f2f299ea77cd573e09ab68bd8f",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-deferral-audit.json",
+      "blob": "8e031cf6b2eb0ff8a09c273f6568b13b3f06825f",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-disk-growth-is-me.json",
+      "blob": "946b6a6b07ca7a770df8c1e70160f031687da745",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-empty-body-survey-under-8000.json",
+      "blob": "d0bff68230b29ccbe9d75e04253e5869f769173d",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-empty-body-survey.json",
+      "blob": "06a4a7e62f6b39b192feb72e8ae209eeea9e8432",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-external-books-searchable.json",
+      "blob": "e5c84d99a385795665ec1fcfe6901a261e488f24",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-false-regression-averted.json",
+      "blob": "411bf1a7ceaba5cb7f5d0c72118617c39888b4ec",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-foundry-backup-survey.json",
+      "blob": "d56fc9e3f31bf1f6bab5597e9cee183a52d162aa",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-gid4715-upstream-empty.json",
+      "blob": "30c1e34c2e47bcafbf5f6e319d6682154ebd360c",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-gq001-rederived.json",
+      "blob": "cce7de030050c67520a4a4e15fe96ec5f9cb4cce",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-gq001-workspace-enforcement.json",
+      "blob": "51fbe97a7975654f574aeb26e5971803657f6b15",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-gq002-effectiveness-per-compute.json",
+      "blob": "da6670be140352f5d98792c9173a123a2570c5c6",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-gq002-rederived.json",
+      "blob": "9b8f0561cd18384fbc60ad0a0206db8de68365ff",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-gq004-pi-primitive.json",
+      "blob": "f8b40bda6cbc98d6ce01057da6ee347a08100f1c",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-gq004-provenance-defect.json",
+      "blob": "2b864707b8e4528ae1884c170bc82eff85176d9e",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-gq005-category-momentum.json",
+      "blob": "608448f07d3dbf18a05367a8882e2bd4ca682a8b",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-gq006-organ-receipts.json",
+      "blob": "4b648daa05c4e62af1b365c96318d5508c7622c5",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-gq006-rederived.json",
+      "blob": "e83f056c085bdbdd28114fa08fbd47f479fc3c0c",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-gq008-cache-block-isolated.json",
+      "blob": "da20f7007df49ce1aab87c0fd848ddd7e72260ed",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-gq008-cache-rerun.json",
+      "blob": "893cb5c6d5ff57afe92fcdcfea20d6c7a46c25b6",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-gq008-rerun-variance.json",
+      "blob": "4d9568fdd2987ad19a35e0e8693847b2ee864ba6",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-gq008-routing-cache-economics.json",
+      "blob": "c866c6a307e19a4387af8f7063fe3d1e8ce0fc57",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-gq009-trigger-audit.json",
+      "blob": "d3156c556065c5a46b907873aa5ab60e5a786b6b",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-gq010-independent-rederivation.json",
+      "blob": "31b7c1ced178e8a980861633b5b38b509c7ac1ad",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-gq010-underrated-evidence.json",
+      "blob": "d33dc22c4d56586859fe12dd9ec07090cb5af3f7",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-gutenberg-mirror-rule.json",
+      "blob": "68770d0e2e7227978a694e5987328fe6a0a115b1",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-html-recoverable-class.json",
+      "blob": "5110d2913110947c575b285f69defda32114a0f5",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-ia-corpus-sizing.json",
+      "blob": "3c6db1a83a8e04a9ce9fd175a3b1f4f45ab455be",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-ia-dedup-check.json",
+      "blob": "2d67d7df6da270a2f380ddb3275a3285866a81c8",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-ia-rights-sparsity.json",
+      "blob": "0c1b784e1b9a3249cb82891d015e6d5590e6182e",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-ia-want-list-probe.json",
+      "blob": "d5a598c7bf6dde5639a43350579f9bd062a900ed",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-ia-want-list-v2.json",
+      "blob": "e2228c241b8d0c33cab9f535d35a607ec04fc7cc",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-large-book-probe.json",
+      "blob": "9d20918cc6bca39fd55f779e57667d4e90b1fdf7",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-launchd-failure-diagnosis.json",
+      "blob": "fb52ed022b3f24051a85122e54a8bd61361c98d8",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-launchd-final-corrections.json",
+      "blob": "2c4577f462fd3cbc1522bf28b3dffa95087572dd",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-launchd-fleet-health.json",
+      "blob": "38af07f6ad941caa12951d55ca4c4f492bea1f21",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-launchd-survey-complete.json",
+      "blob": "b61640db0f87421bca847e8f5687b49bef1c3feb",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-library-growth-published.json",
+      "blob": "93655048fb1cb952f0b15e18b79b11e07a80d8de",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-list-rendered-as-count-class.json",
+      "blob": "f53afd74a0a1468aa667f9ea78fa4fee3fbcbe48",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-logs-db-archive.json",
+      "blob": "2cf6483d43e40f933093d7281baac7b1ea1e971d",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-logs-db-growth.json",
+      "blob": "ef0742fa5672a519f3bc356dab1a735c30ba3f11",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-longs-variants.json",
+      "blob": "9143606f7fbf7fa1e2687c81bddd35aa2d4899fa",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-loop-disk-cost-bounded.json",
+      "blob": "9029e78ffaf35a006ff29087cde0d3007e9926df",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-minimax-claims-with-derivations.json",
+      "blob": "6dfb379d5673ac85d6f300a7ad3f9e5968999caf",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-momentum-collector-dead.json",
+      "blob": "cc7eff1def83b123a614df20cc4ecb96d193738e",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-momentum-timeseries-found.json",
+      "blob": "18b139d1422921d25ea46eff0c23c1ec4fec294f",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-movement-baseline.json",
+      "blob": "43c1d1d5df3f513dc7aa7fc0e99f3d08c6730c47",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-numfound-generalisation-corrected.json",
+      "blob": "1c4b26692dab2a73eab3bbd6654153dc6a9f6330",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-observatory-tailnet-exposure.json",
+      "blob": "a8f7786f9b367185b2e5cce6213e80441b8abba9",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-oracle-gate-is-worktrees.json",
+      "blob": "04919fc993d693d0515781f2a27201aa897595ec",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-oracle-gate-preserved.json",
+      "blob": "6f2f4b7a4c62654216cd451ae965c1c8cd26b913",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-overlap-tracks-library-strength.json",
+      "blob": "dddb2c0495c885a0c75bb2b144f68f8f45c98a8e",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-override-lead-half-verified.json",
+      "blob": "a0b902f7637cbe7d69135f95cb8409f6387c8f11",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-partial-extraction-check.json",
+      "blob": "b8e33683e3f2f3158db8ceb5a2b43f73775f4e3e",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-passage-index-structural-probe.json",
+      "blob": "b0ec1bb00115bae4c1b034ecdb95497083e5eae1",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-passage-summary-and-extraction-gap.json",
+      "blob": "56c1885ff680966cbe49bb0e1ce027eea44830df",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-people-graph-vaulted.json",
+      "blob": "d0d89f607e0a58b0c176be669fce73cb54550746",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-per-request-override-lead.json",
+      "blob": "be8f81c446f72a6ba5b2ac1f26e51dc7fae6b565",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-pi-lens-caches-quarantined.json",
+      "blob": "dbee78a075ac6ea3e00323a243249c83a386ab79",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-prose-as-proof.json",
+      "blob": "168a85f427dfd37b52efd5b17b9e27b6b9293b82",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-quarantine-reverified.json",
+      "blob": "fd0ffbff69bed35eda49690d2906fbb4b80c5faf",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-reading-the-corpus.json",
+      "blob": "115911663ce831f707873eb1b060733c39a5afbe",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-remaining-db-survey.json",
+      "blob": "ccaf5ff0597c102d0ac5c378d20312b12ac71858",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-rescue-refs-and-bundle-restore.json",
+      "blob": "136a794b1c3906ff9b432d085223bf9f89a885b2",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-retention-trap-defused.json",
+      "blob": "c3f1cf12de2e0807a9296114b7b4d124099b105f",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-rights-field-two-provenances.json",
+      "blob": "96a429cae76bf1bb32cedeae7bc8658bf1d1829b",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-rights-strings-classified.json",
+      "blob": "d7dfcb50f56441eed7e9c2aa0946f92a668b91b8",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-route-script-blast-radius.json",
+      "blob": "05c4fbc079ba8d3b3cdd9cc6f07c16ea895dbb2f",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-runtime-failures-traced.json",
+      "blob": "5df833e7252f3a96ed4db070847cf9fb863b70db",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-sec-f16-resolved.json",
+      "blob": "61b690adcea3fbaa2022361bbaf3a34cf539f85a",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-second-copy-infeasible.json",
+      "blob": "f49213461fd9521fe010427448b15f518a49169d",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-self-review-limits.json",
+      "blob": "db72b64c1d0307bc41d20c1269849de4efc9bd50",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-silent-noop-edit.json",
+      "blob": "a6746cb2f62e84eac8ac5d5cecf18fc5e637f6a8",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-snapshot-containment.json",
+      "blob": "ea637e36807d61916a71731f6863692c736b714a",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-source-coverage-gate.json",
+      "blob": "48272be3dfd95119837916b3b9cfe1087716b39b",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-subject-aligned-selection.json",
+      "blob": "99f26048f5b3191665ff23b455d37cc4df8e67c3",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-subject-terms-do-not-transfer.json",
+      "blob": "07fcd7a76ecb9a16a6b22fe60c8060d5ee5c953c",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-the-dedup-regression.json",
+      "blob": "6b038d78a80d8f21efad5b48331a7ea2cb069ac4",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-timestamp-second-defect.json",
+      "blob": "983984c412812d074450a07d6737ece3a7b561ff",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-title-dedup-kills-the-proposal.json",
+      "blob": "a521aae810374d5ee4e74b1b1823d0c2ca464913",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-trailing-gap-signal.json",
+      "blob": "fe41b0c0621f76f03b86c81826518fbbdf4a9c77",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-trigger2-tested.json",
+      "blob": "3d54684d044b242c366948e162956cbf7b3654ec",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-v1-archive-to-vault.json",
+      "blob": "b25cfc6633560ebb64e2cc837008194def4a7195",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-vault-integrity-completed.json",
+      "blob": "a6fa39acf16d68c4c2f08e14def2ff1871446abf",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-vault-integrity-spot-check.json",
+      "blob": "d377605391fd82b382bb82e4971a0f64689f29e5",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-vault-launchd-failures.json",
+      "blob": "4a298e1a86c8c4c05be0cce0e9434d83d511794d",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-vault-passage-index-verified.json",
+      "blob": "c409d19f99d14bbfb54e360a217d8c9cc8be3332",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-want-list-became-books.json",
+      "blob": "5bda874628268f7f27610e1230275f0deab57677",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-want-list-built.json",
+      "blob": "57ad7cbb0adfdc54cbec43bca281511d8b15342b",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-weak-subject-inversion.json",
+      "blob": "67bb49b61c3183468b18b968e370871f56e43e17",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-04-which-levers-are-mine.json",
+      "blob": "b07a424c1ce6c416400c406b4bacd277f7261352",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-777-books-and-the-scans.json",
+      "blob": "a89ea993cbb6e7c93fece5c122f38809de1c127d",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-777-books-incomplete-modern.json",
+      "blob": "527f7a42de887604e3b09a1f7388701167978fd1",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-a-gate-that-examined-nothing.json",
+      "blob": "86c137bef4973c93554981e72939487465ae29da",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-a-speedup-that-was-a-failure.json",
+      "blob": "4caa1133524f9313e2e01c71dbc43ba4d35caecc",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-all-decisions-audited.json",
+      "blob": "b088668f1a390dc27ec2579af610ded1a418da68",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-blast-radius.json",
+      "blob": "c137327ab36fdd6322903c2b3fd36dfb61cb684b",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-builders-had-no-tests.json",
+      "blob": "83a79b40582df8b9fb8c9cdddfe6942e4ce3f78d",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-closing-the-chain-hole.json",
+      "blob": "68b83ddc353a38ff0c414c2b8b886de6f63fb1d3",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-corpus-integrity.json",
+      "blob": "185b8cd365fc4e35e87be35fdb0d5fa604ebc288",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-decision-coverage.json",
+      "blob": "16dd21f60ea48a5ea0203b024de9724f8b29b089",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-decisions-audited.json",
+      "blob": "68ee5365c115911fbe79366311ecebe724be3362",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-decisions-self-deriving.json",
+      "blob": "e85739b21b94f21b43233f406a0271d8d47b1bc8",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-duplicate-vs-quotation.json",
+      "blob": "5c8de2ca69cba69cdd3c905ca1324d20579fad93",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-fixtures-put-to-work.json",
+      "blob": "2361f7c8646ba13ced2a47aa990a8fb6f46ac3b0",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-fourth-list-three-defects.json",
+      "blob": "8f85e58b45c94582a6e7cd99cfd7db522fc54f2b",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-gates-load-bearing.json",
+      "blob": "53268da5224e892d7c08ef5381470c339fc9e98e",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-german-rule-false-positives.json",
+      "blob": "8f35050ac29ebc9a8d18ec2dd42057a501761e8d",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-guard-had-dropped-a-gate.json",
+      "blob": "acddd2caa340443c3dcc2557988dbe7b523b51d4",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-half-built-index.json",
+      "blob": "f093a43719d588c535cd8eb5da6f876d8fc6c788",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-hooks-in-version-control.json",
+      "blob": "b5b34066d8d7077fa49a0f85c89674b9fb137df0",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-i-killed-my-own-rebuild.json",
+      "blob": "c08c6aa2e9c573b9979707beccaa5e5d62bbd8e9",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-irreducible-was-unmeasured.json",
+      "blob": "fcd794bac24ce78bd473b11413acce54832c706e",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-italian-filter.json",
+      "blob": "ad3c935bc82c5c80caa7b336221f98f313d72e59",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-language-filter-at-selection.json",
+      "blob": "0919a928c7823dba9bb7b7af16efdd8d0ead540e",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-last-suite-on-the-hook.json",
+      "blob": "ea607205d8b1701a0a7dc8f2b564a468e68168e0",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-library-page-and-slice-loss.json",
+      "blob": "eac1d0151f7bd830b02c8994247f6036c5e82df7",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-my-gate-broke-the-gate-suite.json",
+      "blob": "e3629ca86724da64df348cddf1cc89cc1912c9da",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-my-own-rule-was-the-blocker.json",
+      "blob": "e1aa519e8870a01b6ce50c5ae981acd4570f3c2e",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-probes-that-printed-into-a-void.json",
+      "blob": "7fc9c57d7c423dc245772f9e91bfdc22dadb920a",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-quality-at-179.json",
+      "blob": "5da6e8ba6f4340894da311fd898731451f0b82d3",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-quality-at-298.json",
+      "blob": "25289e908a2e49d9c619bb7b140d2ead83062c7d",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-reachability-mechanised.json",
+      "blob": "37795fdf072da8927faf543cc5987e81012f2689",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-rebuild-pipeline.json",
+      "blob": "9946797db9cc4c0b9620293eb7297e900428557a",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-refactor-broke-resume.json",
+      "blob": "f70913a210608590ec60bde2504fddc60cbf0f10",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-residual-measured.json",
+      "blob": "cbc4def40e5ca0988a92196dcf01a73028c7ecbe",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-retention-configured-not-enforced.json",
+      "blob": "7eea7d276ab2e33a173247b8dddc398ad97b5fbc",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-search-interface.json",
+      "blob": "b2b195dab85861e3fb00efcaec42555a1ea2f368",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-second-batch.json",
+      "blob": "c9dc3a68111b71a326d52b6490f842b7157a2c79",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-second-want-list.json",
+      "blob": "1f86fbbb383d0dc0bdb0be93a6d7d210b2690e24",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-six-books-not-english.json",
+      "blob": "247360800496df3441d4a891fe51dac1a9fbf41a",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-size-not-rowcount.json",
+      "blob": "8bde9622b98f9b1b03aaae9adb43bc6c09a44abc",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-skip-sqlite-flag.json",
+      "blob": "f6af3cf4305d2ada9c6a9d58004b4d20563f638f",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-success-against-a-corrupt-database.json",
+      "blob": "146f0582d48a4680bd3bee7b9d0fd2f8d20a4a7a",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-synthetic-history-rule.json",
+      "blob": "aef39062d2a75ac3197697602bce1fca6844042b",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-testing-the-script-that-deletes.json",
+      "blob": "fb36e4f75d6294c3ede1e68eae34362c5e361955",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-the-gate-that-could-not-enforce.json",
+      "blob": "114f1055410a76164502d959e33dac8c27d20ab6",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-the-guard-that-could-not-fire.json",
+      "blob": "62f35959941b4f87741947cecbe3bce5ca7e433a",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-the-hook-was-right.json",
+      "blob": "7ce2a8f9c553b633b038db07a5a2b8088e9f77e9",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-the-treadmill-i-built.json",
+      "blob": "258c29b9b39780d0f32fed2ea87bcff56a7ef207",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-third-want-list.json",
+      "blob": "7453f9795035fe69ee5c82910f061852ea98c16f",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-05-vault-paths.json",
+      "blob": "78c2cb954d35112f8a10d8f469f6f5787e46e1d3",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-06-a-regression-that-did-not-exist.json",
+      "blob": "da020122d6864192c9609ae6748d506e5832f8a5",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-06-age-settled-verified-in-production.json",
+      "blob": "2efeebad297ff63efb62beb40cf6516ba190ed98",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-06-commit-width-not-commit-count.json",
+      "blob": "14e9e9826ef6bd05921497107b51ecccd0cc940f",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-06-every-search-fix-was-untested.json",
+      "blob": "2537e150670d2c26c37c8f9dfc36e82bf86934fb",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-06-fast-but-wrong.json",
+      "blob": "bfcfbc2705a9144edc3ad24608a0b7ff5707956d",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-06-fetching-photographs-of-houses.json",
+      "blob": "ef0b0cc76932fa153c0f9df23afb553696404066",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-06-four-title-rules-one-prefix.json",
+      "blob": "eb05793fecd968e036ef4d5fc03d7f295a8a432b",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-06-i-killed-the-build-by-reading-it.json",
+      "blob": "e9f3544d439d148773f2d4dfee41adb0f47ffd5c",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-06-my-filters-disabled-five-cases.json",
+      "blob": "f4fd6390859a3120f705a2ce460aea4c257ac93d",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-06-my-fix-disabled-the-feature.json",
+      "blob": "601a1b1d2d7fa7eb9190b45fc9de13e20bcd8697",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-06-passing-the-guard-was-worse-than-failing.json",
+      "blob": "6508d20df682319af29d97321adc6bbb35db3b78",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-06-rejecting-books-from-1611.json",
+      "blob": "7ada37886f462a7ddbf5e57e2030ab54cddabfaa",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-06-search-took-seven-minutes.json",
+      "blob": "ca2e5e14935c49d8bcc71df6525b2ac8478ebf74",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-06-the-filter-that-came-too-late.json",
+      "blob": "a7235bdc88d5cb21b1db42ca5951454c7089c45b",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-06-the-gate-nobody-could-prove.json",
+      "blob": "2eea84ff3099a20a7e760e6aa9f6308586babc98",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-06-the-hook-crossed-ten-minutes.json",
+      "blob": "a81cfbef307f38f8a328b4fbd7b588eb29cc3ecc",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-06-the-page-could-not-search-the-corpus.json",
+      "blob": "99fa0d597cdd4bd9f5b824e878d31f68992c0616",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-06-the-rights-filter-was-right.json",
+      "blob": "5061812886298b8bc6011308971ba079ad0762b0",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-06-the-rights-rules-could-not-be-tested.json",
+      "blob": "38fcdb67b9240d58491112bddfde5fc9cdaa97c1",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-06-three-passes-to-find-every-non-book.json",
+      "blob": "21c5135a154f45a1435c7008714345a6c4026734",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-06-unverifiable-is-not-wrong.json",
+      "blob": "a5ee1064f027ffbd042e6efc4c22ced9f268b587",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "metrics/2026-08-06-verified-but-not-deployed.json",
+      "blob": "919119c3d7f74b1386a030a48eb47e1561589fa4",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "observatory/com.siso.observatory.plist",
+      "blob": "6cf15d39745a415c062052a102f9de7ebaf76946",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "observatory/snapshot.json",
+      "blob": "dd1b4ea308694a19eccba168b832e6d98e3d48db",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "ops/launchd/com.siso.librarian-mailbox.plist",
+      "blob": "9c26929516aff0d0d472a04cd9a69cb57cc4c14e",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "outbox/2026-08-04T0553-librarian-disk-growth.md",
+      "blob": "ae0cd6075e9137980ded2618b566e6fb03b33450",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "outbox/2026-08-04T0640-librarian-ia-rights.md",
+      "blob": "b534f7fa269fd8ddb0d19a2d4f9c910904249c47",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "outbox/2026-08-04T1327-librarian-momentum-collector-dead.md",
+      "blob": "cc99bb75f3129670e1959d02a6e6da17ee8777d3",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "package.json",
+      "blob": "cb413d737b730e873eb4b647c47ac3c787561d7a",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "proposals/2026-08-03-awesome-signal-canonical-promotion.md",
+      "blob": "30248f27d41882804533f330c91c43eec2626dba",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "proposals/2026-08-03-awesome-signal-staging.md",
+      "blob": "06ce13d6140a741774782cc231af155754d3c0e7",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "proposals/2026-08-03-cached-minimax-runner.md",
+      "blob": "459d7894aa66e17fe7a8be314fc14a6a516ffb22",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "proposals/2026-08-03-claim-layer-contract.md",
+      "blob": "ffd7ce059ad58c065e92ed4d0cd9b3a9b134f77c",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "proposals/2026-08-03-contract-schemas.md",
+      "blob": "dbc05fab9e01fefa7b0ef77a06831d18b937a857",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "proposals/2026-08-03-gap4-gap7-rescue.md",
+      "blob": "9ad46a32a7522e5ff0779e7a3f758465e9e3e476",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "proposals/2026-08-03-ia-adapter-contract.md",
+      "blob": "0e77b92c3afa807c71070f1bcf13146ff2a8398f",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "proposals/2026-08-03-ia-contract-live-findings.md",
+      "blob": "d78d0c1141b08d84c69d9447ed4bb71255fb59db",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "proposals/2026-08-03-ia-live-metadata-probe.md",
+      "blob": "737d7b1cd72987c57de895bfbb0858f39bf87d36",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "proposals/2026-08-03-mac-mini-settlement.md",
+      "blob": "05022db2f0f2c1c6246e7f58dd055fe922b09371",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "proposals/2026-08-03-minimax-fleet-ab.md",
+      "blob": "6dcce773c04c50767fafc032915aa07b3c89a66e",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "proposals/2026-08-03-minimax-routing-repair.md",
+      "blob": "c3d3afff3000076ef9603cce29e8d6edb2807413",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "proposals/2026-08-03-observatory-first-page.md",
+      "blob": "f3a7997286452d49e05fa6e0ac032cf22912fb43",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "proposals/2026-08-03-passage-index-vault-backup.md",
+      "blob": "fa111fd10be464dba4848bd7c289cfc70f726103",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "proposals/2026-08-03-question-portfolio-index.md",
+      "blob": "bad88581835801e3aa96b96e97e764036d205c4c",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "proposals/2026-08-03-refresh-invalidation-ledger.md",
+      "blob": "6dbb0381045f1fa6c2b880125b0e84df8aa84701",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "proposals/2026-08-04-decisions-awaiting-shaan.md",
+      "blob": "5a7450eed9b7e50d4b551ecb0c128db55987e23d",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "proposals/2026-08-04-recover-15-books-from-html.md",
+      "blob": "96acfac546c65ce1faed2e811a7d18aa4c921972",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "public/index.html",
+      "blob": "aa4fbbed65332eda43512449670de5518f5af9b0",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "public/library.html",
+      "blob": "5553c3ae79b5ce816bd73b7376dc6f92cab88a1d",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "questions/portfolio.json",
+      "blob": "19462320f89f30434a5357a24022aeb97a6fe1bb",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "refresh/ledger.json",
+      "blob": "5453734afcb7b45491f5a030e5438c467801e7da",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "schemas/claim-packet-v1.schema.json",
+      "blob": "b0b5f9c89a31b714be28cc16ee6ecf4d1ec4e21b",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "scripts/archive-log-slice.sh",
+      "blob": "f8b2a0c34852662c20c44a0c9018aa925f55211e",
+      "mode": "100755",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "scripts/audit-asserted-numbers.mjs",
+      "blob": "2c2ce1833ee3d4577aff1c6541aaa1d8775c369c",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "scripts/audit-decisions.mjs",
+      "blob": "aa23877ae06e57b38f366bcfab96388e16194b1b",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "scripts/audit-reachability.mjs",
+      "blob": "b9bac69fbb15f4be6c777cf8ec1a7135bdcd71ca",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "scripts/audit-source-coverage.mjs",
+      "blob": "c6e5f3abb4c06091efd13d0cc6c10e921d2c88df",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "scripts/audit-verify-chain.mjs",
+      "blob": "fcef8c2a10699267ca5191d9e05f9ada98448b42",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "scripts/build-library-page.mjs",
+      "blob": "17809502821848af91883baf36852102ccb6ce4a",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "scripts/build-observatory.mjs",
+      "blob": "b46431aa9591b0c251221fa77e9111f33bc4695d",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "scripts/build-review-packet.mjs",
+      "blob": "a862c21428a3586ad04d35d8e39aba82ef7596f5",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "scripts/build-want-list.mjs",
+      "blob": "bba687c6413be0f04fdd750bf8cf371eba942272",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "scripts/check-all.sh",
+      "blob": "2dac02d9c43a3889ef2267427b6084ba86f5f501",
+      "mode": "100755",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "scripts/derivation-sensitivity.mjs",
+      "blob": "170861f3999cd765e1b72435250ba9e1cdade226",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "scripts/enforce-log-retention.sh",
+      "blob": "eec56af915ed2816fb08a01b0b95bf71c3d8e77e",
+      "mode": "100755",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "scripts/evaluate-refresh.mjs",
+      "blob": "f93238f6f91085f6fc6977a26577ed09001c4cbd",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "scripts/gate-selftest.sh",
+      "blob": "0284f6904287d8992d7168a91a2385485c5c66f7",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "scripts/gates-are-load-bearing.sh",
+      "blob": "95ea541c45c6fd9b06a594d07859144adbad5712",
+      "mode": "100755",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "scripts/gq008-cache-experiment.sh",
+      "blob": "49f13daf1e52c67f57abdd0967de5a5e59013e52",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "scripts/ia-dedup-check.mjs",
+      "blob": "77792a63b6116489c8a75068c4ac1aa5f624fc85",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "scripts/ia-ingest.mjs",
+      "blob": "dad8d981f63f5e69cb858d0a5db55e285bd257ce",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "scripts/ia-probe-reproduce.mjs",
+      "blob": "943daeeaf10d71a3faf5712fa5d912ea8c89f6c1",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "scripts/ia-title-dedup.mjs",
+      "blob": "074f6bf0009932c383834f35a38deda676d0c8ec",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "scripts/lib/patch.mjs",
+      "blob": "98d25a1233788cb6047ac2d3eb9581e2ef652a3b",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "scripts/lib/snapshot-paths.mjs",
+      "blob": "eba8eb13d3f31b610682952ac57d50ab33a8ddad",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "scripts/mailbox-flush.sh",
+      "blob": "e80f9c30738df756d53f00cb159d0699086dcf35",
+      "mode": "100755",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "scripts/migrate-book-external.mjs",
+      "blob": "90b42a75f48aa7c3d4938481f0408f9076873630",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "scripts/minimax-cache-route.sh",
+      "blob": "c14a9ae0f48cea8f542526abcd3aa3aae5e7e7fa",
+      "mode": "100755",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "scripts/mm-bulk-runner.mjs",
+      "blob": "5ab4cd2f8b609bb89f743a48a35cc9e4a5ec37aa",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "scripts/movement-baseline.mjs",
+      "blob": "9c829ed2bbec2dda77aa6d8ccbc2c8743c8bbc1f",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "scripts/probe-ia-metadata.mjs",
+      "blob": "e18f4aca3f1b02ccde4f5e07e3fad1b0de0e1ca1",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "scripts/rebuild-corpus.sh",
+      "blob": "1fd55d78b7f567b0bb6469e56d08abd337243861",
+      "mode": "100755",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "scripts/rebuild-selftest.sh",
+      "blob": "c5c305e41d906d2b4cd19dda478694ee2cbc0840",
+      "mode": "100755",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "scripts/retention-selftest.sh",
+      "blob": "c392947b052b8d8bae29640f8d7f02840a8aeac6",
+      "mode": "100755",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "scripts/scratch-test.sh",
+      "blob": "9a0579cd23abb41a7456d3c024bfbc1ae1af67d3",
+      "mode": "100755",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "scripts/serve-observatory.mjs",
+      "blob": "e20cf376c633e70510821cf497f50c67aad80439",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "scripts/survey-empty-bodies.sh",
+      "blob": "7b4220a5ad78a04adeb77ac84be836e8c09d2755",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "scripts/verify-claim-packets.mjs",
+      "blob": "89a0384612df89e8f33eb9ea4e0b0968adca80d1",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "scripts/verify-vault-backup.sh",
+      "blob": "81889b395c75058a1704a6d92e724877e2f50e65",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "sources/internet-archive/adapter-contract.json",
+      "blob": "e891a539bf81865db9160cdbd23e5208dd3c72f6",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "sources/internet-archive/want-list-weak-subjects.json",
+      "blob": "aaec2b6583c3d4a98a4cf75e13f30a7c9e592d90",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "sources/internet-archive/want-list.json",
+      "blob": "0764baebb150c004ee78648ab4d550e9026ba348",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "tasks/lessons.md",
+      "blob": "7878bd851dff8b5cd85f3546336587f7072bbe35",
+      "mode": "100644",
+      "reason": "Operational/evidence state excluded; no content imported"
+    },
+    {
+      "path": "worklog/2026-08-03-2038-refresh-invalidation-ledger.md",
+      "blob": "77dc22b76d7fe47cfe5f6f49002325c688b914bf",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-03-2116-gap4-gap7-rescue.md",
+      "blob": "6fe821f7fa449e3e7a10bc8738dab0fcd6354499",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-03-2128-mac-mini-settlement.md",
+      "blob": "4a3181edfa9d898cb903fbb6a77f4163e6e90bc4",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-03-2145-minimax-routing-repair.md",
+      "blob": "02eb657b0caf1d77857b71d2d19c0d26b995acde",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-03-2158-observatory-first-page.md",
+      "blob": "ee287ea5ba6dfdca53dd3cacff18c8848e200b2a",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-03-2208-ia-adapter-contract.md",
+      "blob": "cc8fa05e51110e32eabb9f1ae0386351bd6b9483",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-03-2215-awesome-signal-staging.md",
+      "blob": "62c8b024779e31cdc5c3ea8d496892bd2627ef74",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-03-2225-minimax-fleet-ab.md",
+      "blob": "87b6a3948df1163adf8f319b86246ef9e020d3fe",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-03-2235-minimax-cache-control.md",
+      "blob": "00e30c22e668a7a4bccf7b321bcf06934a1ba98f",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-03-2242-cached-minimax-runner.md",
+      "blob": "2a845f6c49f6df5f39c08ff2cf07b4df299e01ce",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-03-2245-ia-live-metadata-probe.md",
+      "blob": "fb581c1c171b254caf0aa93323082aa37b60ce6e",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-03-2253-ia-contract-live-findings.md",
+      "blob": "1729fe957b53b6a217ecbbf09afcf3a2c2a1809a",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-03-2305-awesome-signal-canonical-promotion.md",
+      "blob": "1895e8c8142202cf9a2a94b1d4f56c405770c4c1",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-03-2330-passage-index-vault-backup.md",
+      "blob": "0ed3ec212adbdd83a68d1da764655421f87c2499",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-03-claim-layer-contract.md",
+      "blob": "1c39d9e45f8147e15e4de147208c504869e61e6a",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-03-question-portfolio-index.md",
+      "blob": "ee8a59eb4eaff5acbf34775127b16aafbb8d802f",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0010-rescue-refs-and-bundle-restore.md",
+      "blob": "5531298d93d245e25d23c72710dbe55411d4ff9f",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0025-tier-score-gap-not-actionable-here.md",
+      "blob": "4016eda176a57568b8931bfefb2b6172d9dbcbed",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0045-observatory-tailnet-exposure.md",
+      "blob": "a411d0fb558b29697dfe45d07e9f4f58204873ae",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0100-refresh-ledger-earns-its-claim.md",
+      "blob": "9e20249a1e797b8d7ac765cd48cab872fc736b64",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0115-regrounding-gq009.md",
+      "blob": "757c0d67193ad2b9ceb5c7d8db30569db76d3901",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0335-gq010-and-fabricated-timestamps.md",
+      "blob": "ef6e828ce177460efc4bbcddb9a01342136b7691",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0340-auditing-my-own-assertions.md",
+      "blob": "1cf257d976fed23360ea57f947201026f96df68e",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0350-numbers-carry-their-derivation.md",
+      "blob": "d6613fa53fe7015bdd88ca5c9696aa400b8fd459",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0400-minimax-numbers-checked-and-labelled.md",
+      "blob": "ee619a065ef8f88c1f8c774e1dad8e7043be4677",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0410-metrics-declare-their-own-derivations.md",
+      "blob": "7c11d28e287eda9a8a9862cd488ddef1950d0923",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0420-observatory-stops-asserting-routing.md",
+      "blob": "1a780676044995d8fae27b88cbafb3ffbfce873e",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0430-a-zero-that-was-a-typo.md",
+      "blob": "a7b3b95c2bd6508b3b5e00912f33636794b0c093",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0445-checking-where-the-truth-lives.md",
+      "blob": "7ebb446d3f4066cdcb15c7a7ed89c9f577025c8f",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0455-thirty-six-files-one-record.md",
+      "blob": "80ad0fa6d2e7181a313e0d214745ceffebb1d934",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0505-silence-is-not-health.md",
+      "blob": "05b16754821f1f84834b7aa78afa5d9c7ef70518",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0516-two-timestamp-defects-not-one.md",
+      "blob": "e6a858a6791354cce181476b3cf09d771ea393c6",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0520-closing-the-silent-paths.md",
+      "blob": "553b0bb5ffff5a979c693c972358e85e0fef2607",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0520-i-should-not-have-left-it.md",
+      "blob": "a71c2276b8642c8bd8838bf49b4523f2919a2c97",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0523-reading-my-own-page.md",
+      "blob": "6352dee6cab82c2c7ae563ebddb0f21db720a307",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0529-the-screenshot-was-lying.md",
+      "blob": "993abf2b3a3aec3d284ae7e13daa38289b1dced6",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0534-i-was-filling-the-disk.md",
+      "blob": "7bdb00d1d474ee5dadfac4a6990191acaf193067",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0535-seven-questions-not-two.md",
+      "blob": "e18387e52ce164a9451688218b4604ea1b8f0e98",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0540-archiving-the-evidence-first.md",
+      "blob": "946a50b9c3cb6de25af903839f11006122a44e39",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0544-closing-the-hole-i-found.md",
+      "blob": "dbf98d7aede556196144243f14d70ceb40d1e7a1",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0548-the-tool-nobody-could-find.md",
+      "blob": "257848dc0312d49c4e28843c26154dc8f9ee8778",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0550-the-labels-were-honest-this-time.md",
+      "blob": "1d03a573d5589b164918014de61f03b2c46b5db2",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0551-turning-a-comment-into-a-guarantee.md",
+      "blob": "a8f763ffe841be3494740a7540a51d88a9fcaf8e",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0558-a-gate-that-cried-wolf.md",
+      "blob": "c62c42baa1c918f70f1f8b32f8aa232f062882cb",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0601-a-guard-for-my-own-tests.md",
+      "blob": "8c31571ed1183a677c651d0f234e5abf4a41ce21",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0605-scored-against-the-registrys-own-criteria.md",
+      "blob": "7d48c070589753754c40c073adfb0745fb9870ab",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0607-i-reported-work-that-vanished.md",
+      "blob": "6172228d87f6932151672afcaf20aa8dfe9a4b69",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0614-measuring-instead-of-guessing.md",
+      "blob": "c015532f7fb6045bbba302c4b6ce30ae0e32de45",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0619-merging-the-two-resolvers.md",
+      "blob": "7d874de27b52fe692912259d5c25431a8d04c82d",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0623-back-to-the-library.md",
+      "blob": "169c58b686bb7381ae3765574d4c780041cd7077",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0625-claiming-a-question-that-was-not-mine.md",
+      "blob": "f3a0f883f25ab1941909edcbc243649b27f4c864",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0629-dedup-and-the-polish-speeches.md",
+      "blob": "0b0f1906013bf0f27818431c092752f4a917be0e",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0630-i-blamed-the-wrong-layer.md",
+      "blob": "004ab73178b0a9282109dd5bb63ebcb9485a0cf2",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0636-three-filters-pass-the-fourth-cannot.md",
+      "blob": "cf32fe659814f239b435eff3bd4d3530b03a2ecd",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0641-one-of-two-thousand-and-fifteen.md",
+      "blob": "baa65bf25b0f209e3fe64de257496616ca159829",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0645-i-sized-a-corpus-by-sampling-three-authors.md",
+      "blob": "22f16283bd45894319d3af71aa5edddfa116650d",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0645-what-i-cannot-decide-alone.md",
+      "blob": "387047ff15084c2c1f9f0a9837c011c946cca616",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0654-queued-is-not-sent.md",
+      "blob": "e255d897ad1416a0c93432f4f67550111f43b52d",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0658-an-answer-nobody-could-refute.md",
+      "blob": "b7530cff808c1b66a06be54a46eefa554f2fb631",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0700-prepared-not-applied.md",
+      "blob": "0d8e009026ff0e4ce6b6d93b37680177fba0f84d",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0702-seven-of-seven.md",
+      "blob": "b0cebf258f313e463775fde10632ac8b96baa1db",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0707-a-falsifier-that-could-not-fire.md",
+      "blob": "5fc5894eaa2307ef3a98ecefcf8c7080020ab1e1",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0710-a-taxonomy-that-was-not-one.md",
+      "blob": "5642012a8e08a3f3b4d7c43ca8b44ef9fee32902",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0715-the-prepared-script-was-broken.md",
+      "blob": "29643483d09574a6637e685998fe8ade0fe296d4",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0716-the-first-claim-i-reviewed-was-mine.md",
+      "blob": "35850c2cc345fc719aecf82b3266c556a2d1c1e2",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0721-omitting-the-block-bought-exemption.md",
+      "blob": "d2b78eed4b0f25a91400c3d90872030a887b760b",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0727-the-error-that-looked-like-the-defect.md",
+      "blob": "457617e6a85d88a6d79ad2f35215b9d12f1796f8",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0730-sip-blocked-the-mechanism.md",
+      "blob": "318efbe7bdda88e470c34d1bb81a7420d6d20419",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0734-i-nearly-refuted-a-true-claim.md",
+      "blob": "3aa4747ed5e16e7d4aae0913c7532047081f16b6",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0740-every-claim-can-now-be-checked.md",
+      "blob": "328b6d13b1c95b7aabc259d65b686aef85681000",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0745-a-handover-for-whoever-is-next.md",
+      "blob": "86cf42a680c511bd406e1a495ec9983df3fa1215",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0747-nothing-was-checking-the-checkers.md",
+      "blob": "6a54a7a6e1bf6ddba3255dccf4cfdffc61b7b941",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0752-they-were-never-undelivered.md",
+      "blob": "7e6a9efe19b076aa3c244e8dfb924ee246a9c6e7",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0757-two-of-three-was-also-wrong.md",
+      "blob": "898be16fcf56a1bf0e0105d2eea1e979044e3cf4",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0800-three-verbs-work-the-fourth-never-ran.md",
+      "blob": "58a5fa984948e2d240696c6182876b8b951ffc2d",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0805-a-gate-for-the-thing-i-kept-missing.md",
+      "blob": "5c4df0bb0c4ca0cd3e3bd90311fc09e0d52a05ed",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0815-a-disputed-claim-was-published-as-live.md",
+      "blob": "55cf724640879c390ccf40bd3b964481a158d22c",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0815-a-four-request-outlier-nearly-became-the-headline.md",
+      "blob": "53e2052dd58520ed194109543daa27e55e238d2e",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0823-three-kinds-and-a-phantom.md",
+      "blob": "3bea4f4f10e455f442c869fdded95c6b64639304",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0830-the-binary-i-never-checked.md",
+      "blob": "aaf933943ef5c1270ba2574af42de10b4bd12353",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0831-agreement-is-not-evidence.md",
+      "blob": "99b52d51aaac3504b9694bf91a4f567b063fb407",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0838-thirty-seven-checks-were-thirty-four.md",
+      "blob": "431513b647cb51d2c422581f998244ccd92605d6",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0845-momentum-from-the-graph.md",
+      "blob": "61ecd18a39bb9cf76ec1007455cec7bfa981b4d6",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0847-five-copies-of-one-bug.md",
+      "blob": "8fb7b49c966804c78752598819fe988d14aa2aa6",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0855-a-skipped-check-now-leaves-a-trace.md",
+      "blob": "9530639ac1ab6622500a5fad3052066dc7587537",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0900-seven-of-seven-and-what-gates-cannot-see.md",
+      "blob": "d0e0d2bab8d2fed779167c085a9405b101d1d4bd",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0901-i-understated-the-disk-by-four-times.md",
+      "blob": "cd124899b659b42f272eee637b6187b23f8c0258",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0915-making-review-cheap.md",
+      "blob": "b80e238930bcf2f25145e14c4f8b673d189e8fe1",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0917-nine-gigabytes-made-safe-to-delete.md",
+      "blob": "73f084b24113969ee24311e8b63a63e43f11f6a8",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0925-the-mailbox-came-back.md",
+      "blob": "25fee7a92db99ba0da743dc5101f163abb0b1004",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0931-retention-by-age-would-free-nothing.md",
+      "blob": "95385f10859ce07e8c7f23bbdd1dcd361280a7cd",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0935-the-link-flapped.md",
+      "blob": "f1737731f54d7bf33a2b9085923b94c721cf1070",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0936-i-said-a-fix-exists-then-checked.md",
+      "blob": "e48770d312a4ed8ee46fc8dbfee7479303b6fde7",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0942-a-contradiction-that-does-not-matter.md",
+      "blob": "01aedb3b3bbafc111bfb7777be8b9a079860623f",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0947-git-diff-does-not-capture-untracked.md",
+      "blob": "1031161a496ca2854314717e457df8d641eef144",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0950-caches-for-trees-that-no-longer-exist.md",
+      "blob": "01548771ba9ea0d36ec4501027dc3908c8091b92",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0953-the-defect-that-lives-outside-the-gates.md",
+      "blob": "2ae8721e8cf06f825548c82883011b0515dca0a6",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-0958-two-gates-disagreeing.md",
+      "blob": "f9fb62ece19ba6f7ba61d9adc65f28145432bb89",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1002-a-derivation-that-shrank-its-own-source.md",
+      "blob": "8295a5668b356476afcdaecbb5e8425070fdc8b8",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1012-every-vault-database-was-unverifiable.md",
+      "blob": "a84ca49c3ba5c23b05aa3da72fe7c36f217c188e",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1101-i-made-the-gate-chain-unusable.md",
+      "blob": "97775f5e808b9bb5da29ba4b9c2e40ac55e39e63",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1106-the-checksum-that-fits-in-seconds.md",
+      "blob": "627f40ec11383b8ad3e49fe062c2793c945be229",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1118-the-graph-had-no-backup-at-all.md",
+      "blob": "789461162ad51ffc17b951cd33bfc2b82db3ac5e",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1142-fourteen-of-fifteen-had-no-backup.md",
+      "blob": "0868e0c5454309b8eaae29460fadbb14c56bb499",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1147-the-library-does-have-titles.md",
+      "blob": "4b747512c9fce9a202a01e31c71b4d5d750c22bd",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1152-a-green-quick-check-on-an-empty-database.md",
+      "blob": "a8ee5a22da82291faa5b2bb6ef74263bd7f05d31",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1157-redundant-is-provable.md",
+      "blob": "a3920cec4766bdc7d7e4f2ba33a32bfbd5bb1164",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1202-the-smallest-file-held-the-only-copy.md",
+      "blob": "380a873cf02e4d4539486fc9118d495395d1c067",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1206-i-generalised-from-one-database.md",
+      "blob": "f5f99d52685e4eb86c30fb137f0e186c57c50328",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1210-one-book-of-seventy-seven-thousand.md",
+      "blob": "93776d248c47ea115b7e342aa312d69a3d3af637",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1214-nine-backed-four-redundant-two-broken.md",
+      "blob": "71adbdbbbb4e71b5ddd525ecb374eaa946d68c2a",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1219-df-made-one-disk-look-like-two.md",
+      "blob": "823971168354fa03cf84bae49e4cfdc4836ce5eb",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1225-the-source-was-empty-not-the-extractor.md",
+      "blob": "3eff867e92d330682de5e995e9e1a247940e5a89",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1235-one-hundred-fifty-seven-of-one-hundred-fifty-seven.md",
+      "blob": "b9423f3653e041e5b079d8f01d19e13717aca5b8",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1239-a-signature-that-needs-no-network.md",
+      "blob": "fc37fd82f6a6cf367182607097008b220960a721",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1308-eight-hundred-fifty-of-eight-hundred-fifty.md",
+      "blob": "09872b8c498b9a24f78c468af621975731756b5d",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1315-the-signal-i-said-i-did-not-have.md",
+      "blob": "e89a10d167b267c1fee19a02564a67b8b9c3405f",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1319-byte-faithful-at-one-megabyte.md",
+      "blob": "da43a93484c3519726ca356f38bcf47b552395c9",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1323-a-category-ranking-that-was-one-repo.md",
+      "blob": "dde257251f2e338a1095e66ca977d9e9ca9508ee",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1329-four-hops-from-a-deleted-script.md",
+      "blob": "080bb79c3adaca926c55fafb736afd067b130a78",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1332-twenty-five-of-twenty-six-are-one-defect.md",
+      "blob": "8308cd62e61a7ef8fb5e2957b2b2eb7fc0c3d0d5",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1335-the-exception-was-the-same-defect.md",
+      "blob": "d6af8b496649cad9a6d62af42cf9a70a2a76bde0",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1339-nothing-on-the-vault-is-reachable-from-launchd.md",
+      "blob": "fdc37bbf3713f22c38a628dfcbb720a0b62b34e1",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1341-i-classified-by-the-shallow-test-again.md",
+      "blob": "8d981885862c3fd145b0bda4aca754731f4643fa",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1344-i-called-a-working-file-broken.md",
+      "blob": "73287a1803a246aa3bf116523bc32a23be2355d0",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1349-the-disk-problem-is-me.md",
+      "blob": "7bbcde12242079536be547860c2e7ab2e55b2b7f",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1353-stored-twice.md",
+      "blob": "23e8bf4f074e15aea306f842d2b66773a6fae661",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1358-two-levers-are-his-one-is-mine.md",
+      "blob": "992644496cadc73a23d18f3315da1edbc19865a4",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1406-a-count-is-not-a-message.md",
+      "blob": "387d9eec732fc5c567e78d55a92aaa392d93f58a",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1412-six-of-seven-claims-cite-only-themselves.md",
+      "blob": "1717b96adf30a7b4dcc64d089813dae5f52392d1",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1417-i-read-a-comment-and-called-it-measurement.md",
+      "blob": "906d9e99efe0edab31ae71d784eb4c065eb79ff5",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1423-caching-is-the-second-order-correction.md",
+      "blob": "b962af39fe5f7a86b14237bfdf2e550a546adc4f",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1428-the-denominator-grew-and-the-numerator-did-not.md",
+      "blob": "587aaf37367836ef0be8331d68802f878c36f0cf",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1432-the-zero-does-not-vary.md",
+      "blob": "82ef1dd80b851370737437126eff9343bb187010",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1438-a-number-i-could-not-honestly-refresh.md",
+      "blob": "ebdf9dcec46a34db1eb58b20c9372d4a60b85fcc",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1443-nought-point-nine-days-or-three-point-nine.md",
+      "blob": "9f84a812cf21a54e3d8f099b3dadda9fd66f869e",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1453-a-backup-verified-this-morning.md",
+      "blob": "75443c74fa69bc2942941a063af68df57f3a2b77",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1458-my-handover-had-gone-stale.md",
+      "blob": "a8a2b819b9387fa556f30d2f5c9740d442fa8b0a",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1505-c6-says-copy-first-not-do-not-touch.md",
+      "blob": "e5b38699cb4326f0659a229d871f15665c78d95e",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1512-i-generalised-from-one-file-to-two.md",
+      "blob": "13a49ca37d11f9fb63f257c99dcdac3d4c0742bc",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1533-a-narrower-reason-than-i-gave.md",
+      "blob": "cd82da3f7c96256d4ebed7a12d24c06154895afc",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1538-five-triggers-one-sentence.md",
+      "blob": "497478d7194ff7d93154275202d6f0e8d8200c23",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1542-the-evidence-was-one-ls-away.md",
+      "blob": "75e27c58e5c631e0c68fe459e7c57856eedfc128",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1548-a-shared-file-is-not-shared-routing.md",
+      "blob": "05cbdb771887a4616ecd940c0e68128477136a5e",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1553-i-presented-a-binary-that-may-not-be-one.md",
+      "blob": "4e30e392d34ece44813391e0da76274492875772",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1558-half-verified-is-a-real-answer.md",
+      "blob": "6f216d90ad4d0c65534a948cb34dbc7dbaf84203",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1604-a-true-deferral-doing-extra-work.md",
+      "blob": "56b24c1554c6b4f3025ebc5b967b5aac32715c71",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1610-the-library-already-answers-it.md",
+      "blob": "5422b9e079c29e16abc2eea8109e5e2d9877efb6",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1616-i-quoted-three-books-we-already-own.md",
+      "blob": "dc2f0b81496f1da9e3c5967722f5a9b95176d741",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1622-overlap-tracks-our-strength-not-their-content.md",
+      "blob": "e5a5a6951cd5eab2af22b5de988a987106fe2ea2",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1628-aim-at-the-weakness.md",
+      "blob": "fc161cdcad662d20ad34cde9a42a82cbc7cb146c",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1635-a-census-was-five-queries-away.md",
+      "blob": "7cb86f46332653d13299ff67dfd5312932d3c65f",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1638-one-hundred-and-twenty-eight-counted.md",
+      "blob": "e540450e7d097c8bdc8fb46fb974fc14da8e45cf",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1642-i-did-it-again-and-wrote-the-rule.md",
+      "blob": "86276576c5c98b26008d2ac3b4dfca5f60a07eb3",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1646-the-want-list-exists.md",
+      "blob": "5f20ea806f09f9ee851182e0fd0194fc928dbcfc",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1650-i-truncated-a-string-and-nearly-cried-wolf.md",
+      "blob": "de535043f786a2f9dbdf6e0cd1fa3240af269664",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1653-five-grades-not-two.md",
+      "blob": "b1243d8c1d66b399113aedec720021799e7753fc",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1657-a-rule-that-existed-only-as-a-count.md",
+      "blob": "431264365aaff22b1ba4ba7a49792f2109806e79",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1701-subject-names-do-not-transfer.md",
+      "blob": "8f4396b926fd1af1131df2160b9f28a433fb3442",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1706-a-decision-queue-that-drifted.md",
+      "blob": "1ef644d83ffdf5407c16cb390f68bee8c325bb96",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1711-sec-f16-never-existed.md",
+      "blob": "e6c709566c05c0d56d3275dbee892dd46c16a826",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1714-a-maxdepth-became-a-claim.md",
+      "blob": "4a30b4f007b2efb38950ba45f4524ae48e35108c",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1717-the-first-deferral-that-held.md",
+      "blob": "37d3c0d2efeb90d3a04630c0a82165eb475858a2",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1720-ninety-seven-percent-was-the-best-case.md",
+      "blob": "35c467757835c50e279094c43c548167d0f79d87",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1725-a-count-without-content-again.md",
+      "blob": "89df3aa21966e59dda674750d7fa07006fa15fd5",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1733-fixing-the-class.md",
+      "blob": "e41c0f0644d50738fdc8aff08ebef6cbea3a2146",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1753-the-constraint-was-my-pragma.md",
+      "blob": "9dce03b339e9dc669e3c9c638899322c725937e7",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1823-my-own-fix-still-filled-the-disk.md",
+      "blob": "a736823b1154522aef53159ce5d8f9767d1abacf",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1830-the-8gb-i-never-opened.md",
+      "blob": "d5898a308ff7fd83dfb74a2afd9cf7e4fed95fe6",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1845-the-limit-that-was-real.md",
+      "blob": "5cbe7cf7152cf38cd25389411b0977818e12bf22",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1855-a-route-that-existed-all-along.md",
+      "blob": "593fc594e8d2d1dacad1735e7b1e9b0a1701a7b1",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1912-the-want-list-became-books.md",
+      "blob": "980df7dbc74d540b438b068584c7ae2f6d92206c",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1916-the-want-list-became-books.md",
+      "blob": "e92a9857a6d6a77895c55dae4ef337c8682b2486",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1921-two-sources-for-the-first-time.md",
+      "blob": "d1e986c62a4471e1c4971232adff8b8db6ff2755",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1929-the-regression-i-made-an-hour-ago.md",
+      "blob": "9263b87ab8fea85bfa877424797adfaa599f99de",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1943-a-gate-that-failed-its-own-test.md",
+      "blob": "648df1f73e80cbe80e06a5c0c80b4f5024680d9d",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-1957-reviewing-my-own-claims.md",
+      "blob": "15d0ddc07f4afe0ded267470f6315b0fb0a5d2a6",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-2007-defusing-my-own-timer.md",
+      "blob": "b1e9d51d28554b052e21b9f52b6e18618f59de83",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-2024-hunting-the-pattern-instead-of-tripping-over-it.md",
+      "blob": "b696bc97dd2a0e28632664927a6a9d0d3a54a418",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-2037-the-regression-that-was-my-probe.md",
+      "blob": "14038b02053266f050d4e58b59ae332ae8ad3fe6",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-2054-declaring-a-reproducer-found-four-defects.md",
+      "blob": "1c23128d9206dceedf9fa026406e7188bb75bde8",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-2112-a-mechanism-not-a-resolution.md",
+      "blob": "5d025da00298d9bcc4aa66c273d2684fdc34a02a",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-2127-the-edit-that-never-applied.md",
+      "blob": "4e5eb4e6fdc3862943894e925965ed1b9e2d04cf",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-2146-a-guard-that-could-not-see-its-target.md",
+      "blob": "89c40197e7971ecb4e9dc2e08557446f133b0b2c",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-2200-the-books-are-searchable.md",
+      "blob": "7000488fc241904b866aa5358c197bc417ca9756",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-2226-the-library-grew-and-nothing-said-so.md",
+      "blob": "938f698f2f08f342b23f12791bacce76a40d8909",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-2241-an-unread-book-is-inventory.md",
+      "blob": "a7ff39c334fcecf90627fbbd6df9b1b5610ce6dd",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-2256-the-limit-i-declared-permanent.md",
+      "blob": "3ac18459cd369eff928981f4a1f128a96c29adc0",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-2302-the-reason-the-indexes-exist.md",
+      "blob": "4a9bb5eda152d9dd6d54b8610ee01364179907c7",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-2315-configured-is-not-enforced.md",
+      "blob": "d17cad023d485e76ad82266e7ce257a291fa4b7f",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-2327-size-not-row-count.md",
+      "blob": "0d2783abc9508086c461588e9bb66909e825d2bf",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-04-2356-the-page-and-the-archive-that-ate-itself.md",
+      "blob": "b57191381f4a1d89b1c044fe66a2718063df95a0",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-0003-testing-the-script-that-deletes.md",
+      "blob": "5ef3e4f9c3bb1cea5ec502f52d924d47bc789dd5",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-0041-are-the-gates-load-bearing.md",
+      "blob": "7f3b80da3a1b41ed0f21c8ecb478fdebe88edb14",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-0100-a-guard-cannot-protect-its-own-caller.md",
+      "blob": "54f94ef62d3ef808d9e96284ee4afb195602fc6d",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-0117-the-hook-that-protected-one-clone.md",
+      "blob": "f15b81763e49f61ba1265d94f76ef43e0fcb8138",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-0211-measuring-the-blast-radius.md",
+      "blob": "d55d3f16a422d194ab9aec3ca4e10dad52119c7b",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-0233-the-speedup-that-was-a-silent-failure.md",
+      "blob": "0915a7a2cd6cba32c97169e8bb7941b334ee5c28",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-0243-one-idea-is-not-a-search.md",
+      "blob": "133522b1299e2e607e751861f32ac980943395c3",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-0257-my-own-rule-was-the-blocker.md",
+      "blob": "2b246087592e25fad5758c21c119d7d82fc3c74b",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-0318-irreducible-was-another-unmeasured-word.md",
+      "blob": "c3aa1d15c09a6fc08babcc588d63934849fc797f",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-0348-back-to-books.md",
+      "blob": "1f32c4c35caf68693545c5b1243960fe2dddfaa5",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-0355-quality-at-179-books.md",
+      "blob": "9729457afbc1ed94fdeb8f31fa7588d7e2df2f89",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-0407-a-treadmill-i-built.md",
+      "blob": "09ab24586a7676101ac37581a7ea9ec98aae44d0",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-0416-synthetic-history-burned-me-three-times.md",
+      "blob": "26be86b68ed854673ba9de927a0d5c59ab8e8c96",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-0424-the-corpus-checked-against-itself.md",
+      "blob": "cae79c2b1cbd4fd62f8149967a3f6ac417e313f1",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-0433-the-guard-had-dropped-a-gate.md",
+      "blob": "950a1e5482ef871ef1777d1d27b6ba2ec86a1e9f",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-0440-mechanising-the-unreachability-pattern.md",
+      "blob": "de5715d0b3bc901405a739d5c9fa38660f362af7",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-0446-reachable-is-not-true.md",
+      "blob": "1fe29912017da5f68be1343c014c6db2e866dee2",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-0454-checking-two-of-six-is-sampling.md",
+      "blob": "7c8b395f5ddb07d7b630483128faac9f894491df",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-0502-the-decisions-now-check-themselves.md",
+      "blob": "a0b0390c5e0387cdee230c41cab78eac74fad8bc",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-0537-the-library-reaches-298.md",
+      "blob": "d5af644ab71a3200d258cd2f5b70eb1cb8371564",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-0544-quality-after-quadrupling.md",
+      "blob": "51fc982768b67e43cc683fb6845f214bd64ec498",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-0559-six-books-that-are-not-english.md",
+      "blob": "9624a3a5cd724ae3509d7caec5d44c1e983d6d45",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-0610-a-report-is-not-a-filter.md",
+      "blob": "6d1486da54862b51a6fdceb52bd8bda54dfa5326",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-0640-a-manifest-that-overwrote-itself.md",
+      "blob": "b1f5c5190cd78464866fc9b3e46c619c19c68bf6",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-0652-the-order-was-in-my-head.md",
+      "blob": "dc9d8bfb38ef5f63e863bf6747e7fae76a9060f3",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-0701-the-builders-had-no-tests.md",
+      "blob": "337600426e2c2752484267ef0500edc93e4f0859",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-0713-fixing-the-root-not-the-symptom.md",
+      "blob": "6c9b237da7c86e28fcfd32973ecf4fb6eb8b9037",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-0722-using-the-fixtures.md",
+      "blob": "c88c6f51e8413a61b4fc6ab6dbe4205924605079",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-0741-a-refactor-that-broke-resume.md",
+      "blob": "3a4e2015885ba60a9fcdb8bb5e3bef821ee72119",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-0807-three-languages-three-thresholds.md",
+      "blob": "8e708ee6a7926de2fd60dbb1c9e3ebfe5246a34d",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-0900-610-books-and-six-duplicate-editions.md",
+      "blob": "1c0d3fea5bdcfcdb269eea4b1a7207ca2622b7ac",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-0926-a-half-built-index-looks-healthy.md",
+      "blob": "e0c40429782f48cb4b208e326e47d9a81a911783",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-1004-a-phrase-not-a-measurement.md",
+      "blob": "6d922c9a04103e8560517e7f3919a08691f1935f",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-1258-777-books-and-the-scans.md",
+      "blob": "eb55258efa66a88ed653a44f04fcfa9b63667127",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-1324-the-rule-i-never-tested.md",
+      "blob": "3854c73fda552981ba8d2113e0d5d56d774bc4ec",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-1526-927-books-and-a-truncated-serial.md",
+      "blob": "3c14f1935e7eb84264b635ce0aad917dc64626f7",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-1716-1128-books-and-a-book-that-indexes-to-nothing.md",
+      "blob": "fd9f870772756f91bac2b1fb614f2a2ce317168c",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-1801-the-last-suite-off-the-hook.md",
+      "blob": "6faaf5d9cd2af50b4db0bc337333787cde865403",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-1827-the-guard-that-could-not-fire.md",
+      "blob": "a7f81d7a0d601ef7bfe4ac0f2f7c17e53abd3c77",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-1837-success-against-a-corrupt-database.md",
+      "blob": "236f14b0580032de44efbbbe8ee652ec960d0b72",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-1848-a-gate-that-examined-nothing.md",
+      "blob": "ecdc08647ffd5104a90e9af4164265967cd0622d",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-1901-probes-that-printed-into-a-void.md",
+      "blob": "52ca62664f1c21a558fed2eeef9c8e69a8900689",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-2009-the-hook-was-right.md",
+      "blob": "56cb2163454204af9fe6ad374d6dcc64b13a3473",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-2027-gq001-v2-the-gates-became-real.md",
+      "blob": "40633a5ce3a8e1300dc56c8fd35a913c8f243b4a",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-2048-the-gate-that-could-not-enforce.md",
+      "blob": "e812461b3ee7a9fe37ce6720c2aa3d8f55974874",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-2128-my-gate-broke-the-gate-suite.md",
+      "blob": "8bb239f85c9aea763810de60595d2cd72adc34f9",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-05-2321-i-killed-my-own-rebuild.md",
+      "blob": "fe41833fe23bde28056a5df8547f8308cee2dbc0",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-06-0018-the-hook-crossed-ten-minutes.md",
+      "blob": "b81b40f8538f215c20143b8d6a7c05cb19d77ec3",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-06-0040-unverifiable-is-not-wrong.md",
+      "blob": "a451103c5a26f2d317418f43bf54e6eaff027dd8",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-06-0233-the-gate-nobody-could-prove.md",
+      "blob": "936f752979312657d524ef4482508113a6de0a98",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-06-0306-my-filters-disabled-five-cases.md",
+      "blob": "a33ad7eeadeb67c47a4ea9ccbba0bd564873b876",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-06-0345-commit-width-not-commit-count.md",
+      "blob": "687c66ca875265697cf05d496c9cfe468dde244c",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-06-0523-search-took-seven-minutes.md",
+      "blob": "a12eecb7dd602a6331bd8df5881c34e32a1bc325",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-06-0606-my-fix-disabled-the-feature.md",
+      "blob": "8f1d3a086710b8f68d90344a49adcfea37fb5789",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-06-0642-the-page-could-not-search-the-corpus.md",
+      "blob": "1cd49ad3e25ced76b8899fc07e04403bd200c274",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-06-0808-verified-but-not-deployed.md",
+      "blob": "2e8c1a37d2e471af4c7ef605e2789998c6f6f3e2",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-06-0919-i-killed-the-build-by-reading-it.md",
+      "blob": "fe1fa23b4a11b2033ab64f97ea66ae8ccd2dc2fd",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-06-1024-fast-but-wrong.md",
+      "blob": "680d8a2cf4d2a6b7c8e796f72547e64713c6a096",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-06-1052-every-search-fix-was-untested.md",
+      "blob": "ff756fa833347f8f95bbc2207a05645306dae58a",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-06-1113-the-rights-filter-was-right.md",
+      "blob": "4dd25321cb6051a80d7d5f82d7c0eb0cf67a6b5f",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-06-1200-rejecting-books-from-1611.md",
+      "blob": "6d2701015d638ae792ca2ac8ca9493e89a31c764",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-06-1421-a-regression-that-did-not-exist.md",
+      "blob": "4754687963a5fc8e8c2d8607f58f4bed5b724910",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-06-1452-age-settled-verified-in-production.md",
+      "blob": "4a6cdb3ec5e842c4e77cbcedd5169b8aefacc8c4",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-06-1521-passing-the-guard-was-worse-than-failing.md",
+      "blob": "ef536382b70e0a7ba34258a211c25eb709cf794b",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-06-1537-the-filter-that-came-too-late.md",
+      "blob": "45fd56bfab250f4be57bdde3c81c2857370a1920",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-06-1620-the-rights-rules-could-not-be-tested.md",
+      "blob": "0f57c9e5b7878ccea782ce62574a55cba3c48fa4",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-06-1648-fetching-photographs-of-houses.md",
+      "blob": "b8328ed00c9947bcce25ff9ad09a666b4ca83e28",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-06-1717-three-passes-to-find-every-non-book.md",
+      "blob": "eea1456dd96b17c5fb9899ddf80a5cc49022d8d4",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    },
+    {
+      "path": "worklog/2026-08-06-1732-four-title-rules-one-prefix.md",
+      "blob": "20697f30ff0dac45215ece529ec7c38f0580d909",
+      "mode": "100644",
+      "reason": "Outside selected offline toolchain closure; source retained at pinned origin"
+    }
+  ],
+  "source_tree_files": 572,
+  "locally_authored": [
+    {
+      "path": "CHECKS.json",
+      "sha256": "27d9a09878d6f497db0844262d089c09c1d201817776ca276a3548f374b8214a",
+      "purpose": "Migration documentation, synthetic acceptance check or offline receipt verification"
+    },
+    {
+      "path": "README.md",
+      "sha256": "14add6b8cf3698e56191cccfe67a924fa20738fcdc3ce181334135b9d7625b67",
+      "purpose": "Migration documentation, synthetic acceptance check or offline receipt verification"
+    },
+    {
+      "path": "check.sh",
+      "sha256": "d450f25f476fce188dc44ca3f9140d543c948b83e735051524873fd6f64b837d",
+      "purpose": "Migration documentation, synthetic acceptance check or offline receipt verification"
+    },
+    {
+      "path": "tests/toolchain.test.mjs",
+      "sha256": "407d8a5eaf1f3104fa7631c3b08ed5a6ae2a65a9bec0da368939185e544bb49a",
+      "purpose": "Migration documentation, synthetic acceptance check or offline receipt verification"
+    },
+    {
+      "path": "verify_imports.py",
+      "sha256": "4555a4060f8e88db978e2176c392bd2a24b8716ed49c5cc93f7079fac1f452aa",
+      "purpose": "Migration documentation, synthetic acceptance check or offline receipt verification"
+    }
+  ],
+  "remaining_limits": [
+    "No corpus hydration or production use; synthetic temporary inputs only.",
+    "No full standing-agent, observatory, operational evidence or release-media migration.",
+    "No global module, index, ledger or dependency added; parent owns landing.",
+    "Spelling conversion is an inherited dictionary heuristic; uppercase-only F substitutions remain unsupported.",
+    "Integrity unavailable/locked output retains explicit skipped:true and exit 0; not a pass.",
+    "Source metadata size enumeration was stopped when lazy fetch behavior was noticed; only allowlisted content was written to target."
+  ],
+  "dependency_closure": {
+    "entrypoints": [
+      "scripts/build-external-passages.mjs",
+      "scripts/add-longs-variants.mjs",
+      "scripts/search-library.mjs",
+      "scripts/corpus-integrity.mjs"
+    ],
+    "local_edges": {
+      "scripts/build-external-passages.mjs": [
+        "scripts/lib/vault-paths.mjs",
+        "scripts/lib/selection-rules.mjs"
+      ],
+      "scripts/search-library.mjs": [
+        "scripts/lib/vault-paths.mjs"
+      ],
+      "scripts/add-longs-variants.mjs": [
+        "scripts/lib/vault-paths.mjs"
+      ],
+      "scripts/corpus-integrity.mjs": [
+        "scripts/lib/vault-paths.mjs"
+      ],
+      "scripts/lib/claim-paths.mjs": []
+    },
+    "runtime": "Node.js builtins and existing sqlite3 CLI (FTS5 and JSON); no npm dependency.",
+    "external_inputs": "Explicit vault/index and BOOKS_DB catalogue; DICT_PATH or OS dictionary for optional spelling build. No private/real inputs exercised."
+  }
+}

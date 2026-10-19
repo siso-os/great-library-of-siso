@@ -542,7 +542,7 @@ function frontDoor(works, sections) {
   <section class="loop-section shell" aria-labelledby="loop-title"><div class="loop-heading"><div>${eyebrow('The compounding loop')}<h2 id="loop-title">Every part feeds the next.</h2></div><p>Intelligence · open-source code · GitHub storage · Cloudflare · people.<br>The operating thesis—not a claim that every stage is already proven.</p></div>
     <div class="reading-map loop-map"><svg viewBox="0 0 1330 360" aria-labelledby="ecosystem-title" role="img"><title id="ecosystem-title">Clients fund compute; owners build packs; the Library attracts people; Foundry and God Questions improve systems and win better client outcomes.</title><defs><marker id="loop-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8" fill="#82967e"/></marker></defs><g class="e" marker-end="url(#loop-arrow)"><path d="M310 90H375"/><path d="M630 90H695"/><path d="M950 90H1015"/><path d="M1270 90H1300V270H1275"/><path d="M1020 270H955"/><path d="M700 270H635"/><path d="M380 270H315"/><path d="M60 270H30V90H55"/></g>${nodes}</svg></div>
   </section>
-  <div role="group" class="industry-front-links shell" aria-label="Foundry research"><a href="${href('industries/')}">Browse industry research →</a><a href="${href('valuation/')}">Explore code valuation →</a></div>
+  <div role="group" class="industry-front-links shell" aria-label="Foundry research"><a href="${href('agency/industries/')}">Browse industry research →</a><a href="${href('valuation/')}">Explore code valuation →</a></div>
   <section class="agent-reading shell" id="for-agents"><div>${eyebrow('For agents')}<h2>Read these five files.</h2><p>Then follow a Work’s dossier to its exact source. A Work is an identity, a Release is an evidenced version, and an Assembly describes how Works operate together.</p></div><ol>
     <li><a href="https://github.com/sisodias/great-library-of-siso/blob/main/README.md">README.md</a><span>Identity and boundaries</span></li>
     <li><a href="https://github.com/sisodias/great-library-of-siso/blob/main/AGENTS.md">AGENTS.md</a><span>Contribution and safety contract</span></li>
@@ -1022,7 +1022,7 @@ function navigationFrame(path, contents) {
   const groups = [
     { id: 'explore', label: 'Explore', destinations: [
       ['Library', '', 'library'], ['Agents', 'agents/', 'bot'], ['Research', 'research/', 'flask-conical'],
-      ['God Questions', 'research/#questions', 'target'], ['Industries', 'industries/', 'building-2'], ['Value research', 'valuation/', 'bar-chart-3'],
+      ['God Questions', 'research/#questions', 'target'], ['Industries', 'agency/industries/', 'building-2'], ['Value research', 'valuation/', 'bar-chart-3'],
       ...(works.some(work => work.slug === 'siso-source') ? [['SISO Source · private', 'works/siso-source/', 'lock', true]] : []),
     ] },
     { id: 'registry', label: 'Registry', destinations: [

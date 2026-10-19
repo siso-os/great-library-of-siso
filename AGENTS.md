@@ -60,6 +60,15 @@ verification and repository-relative evidence only. Runtime migrations, session
 locators and machine paths belong in ignored `.local/` or the private owner
 handoff, never in that public log.
 
+## Frontier Question work
+
+For a bounded question investigation, read [FRONTIER.md](FRONTIER.md). It is the
+shared entrypoint for planning, source research, critique, synthesis and recovery
+across agents. The offline packet/receipt tooling references the existing Work and
+owner task; it neither changes question state nor grants execution or publication
+authority. Keep run payloads owner-held. GQ-011 remains linked to UNSOLVEABLE;
+GQ-023 is compute/delegation. All repository rules below still apply.
+
 ## Local checkout contract
 
 The preferred machine-neutral checkout is `$SISO_WORKSPACE/Great_Library_of_SISO`. If `.local/LOCATION.md` exists, it records the exact checkout for that machine. Never publish machine-specific paths.
@@ -87,3 +96,21 @@ Use one active maintainer by default. Parallel Library lanes are permitted only 
 ---
 
 The Great Library of SISO — Built by the SISO Open Source Foundation · Funded by SISO Agency.
+
+<!-- siso:district begin -->
+- `library` | siso.library | The Great Library: catalog of works, registry, site and bin/gls
+- `library/banks/siso-shell` | siso.library.banks.shell | JSON to a finished HTML page: a bank of 25 page templates
+- `library/banks/siso-ui-base` | siso.library.banks.ui-base | UI corpus and the UI Box review app
+- `library/foundry` | siso.library.foundry | Turns large source corpora into traceable, ranked research knowledge
+- `library/knowledge` | siso.library.knowledge | The knowledge system: sources, pipelines, pages, books, graph (content in data blocks)
+- `library/knowledge/app` | siso.library.knowledge.app | The SISO Knowledge app: composes the knowledge collections into one searchable place
+- `library/people-graph` | siso.library.people-graph | People graph: who is who, linked to books, repos and videos (data in blocks)
+- `library/works/erdos` | siso.library.works.erdos | Erdos problems work (was siso-unsolveable-mathematics)
+- `library/works/repo-bank` | siso.library.works.repo-bank | Repo reuse catalog pipeline, GitHub farm tooling and curated prior art; bulk banks stay at pinned source
+- `library/works/repo-bank/bank` | siso.library.banks.repo-bank | Repo Bank corpus metadata and historical collection receipts; authored tooling is siso.library.works.repo-bank
+- `library/works/siso-evidence-engines` | siso.library.works.evidence-engines | Evidence engines research work
+- `library/works/siso-stargate-library` | siso.library.works.stargate | Remote viewing and psychoenergetics research (public mirror archived)
+- `library/works/task0001` | siso.products.os.task0001 | SISO Internal TASK-0001 programme archive: control-plane atlas, design directions and evidence.
+- `library/works/trader-platform-research` | siso.library.works.trader-platform | Trader platform research and its site
+- `library/works/unfuck-the-project` | siso.library.works.unfuck | Whole-project ownership prompt pack for agents
+<!-- siso:district end -->

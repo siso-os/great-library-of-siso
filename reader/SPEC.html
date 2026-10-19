@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Great Library, rebuilt: spec</title>
+<style>
+:root{--bg:#141210;--panel:#1c1916;--line:#2e2924;--ink:#ede7df;--mute:#9b9186;--amber:#f5a524;--violet:#a78bfa;--green:#4ade80}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 ui-sans-serif,system-ui,-apple-system,"Inter",sans-serif}
+main{max-width:1040px;margin:0 auto;padding:40px 28px 80px}
+h1{font-size:34px;letter-spacing:-.02em;margin:0 0 6px}h2{font-size:21px;margin:44px 0 10px;letter-spacing:-.01em}
+.sub{color:var(--mute);margin:0 0 26px}.k{color:var(--amber);font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:14px}td,th{border-bottom:1px solid var(--line);padding:9px 10px;text-align:left;vertical-align:top}th{color:var(--mute);font-weight:500;font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+.now{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px}.card b{display:block;margin-bottom:4px}.card p{margin:0;color:var(--mute);font-size:13.5px}
+ol li,ul li{margin:4px 0}code{background:#26221e;padding:1px 6px;border-radius:5px;font-size:13px}
+/* the mock */
+.mock{margin-top:14px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#0f0d0c;box-shadow:0 30px 80px -30px #000}
+.bar{display:flex;gap:8px;align-items:center;padding:8px 12px;border-bottom:1px solid var(--line);font-size:12px;color:var(--mute)}
+.seg{display:inline-flex;background:#1f1b18;border:1px solid var(--line);border-radius:8px;padding:2px}.seg span{padding:3px 12px;border-radius:6px}.seg .on{background:#2c2621;color:var(--ink)}
+.app{display:grid;grid-template-columns:230px 1fr 190px;min-height:470px}
+.side{border-right:1px solid var(--line);padding:12px 10px;font-size:13px}.side .q{border:1px solid var(--line);border-radius:8px;padding:6px 9px;color:var(--mute);margin-bottom:12px;display:flex;justify-content:space-between}
+.side .h{font-size:10.5px;letter-spacing:.09em;color:#6f665d;margin:12px 6px 4px;text-transform:uppercase}.side .i{padding:4px 8px;border-radius:6px;display:flex;justify-content:space-between;color:#cfc6bb}.side .i.on{background:#2a241f;color:var(--ink)}.side .i small{color:#6f665d}
+.side .c{padding-left:20px;color:var(--mute)}
+.page{padding:22px 34px}.crumb{font-size:12px;color:var(--mute)}.page h3{font-size:24px;margin:6px 0 4px;letter-spacing:-.01em}.meta{font-size:12px;color:var(--mute);display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}.meta .pill{border:1px solid var(--line);border-radius:99px;padding:1px 8px}
+.ln{height:9px;background:#2a2521;border-radius:4px;margin:9px 0}.ln.s{width:62%}.ln.m{width:84%}.page h4{margin:18px 0 6px;font-size:15px}
+.toc{border-left:1px solid var(--line);padding:22px 14px;font-size:12px;color:var(--mute)}.toc div{margin:6px 0}.toc .on{color:var(--amber)}
+.home{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}.shelf{border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:12.5px;background:#171412}.shelf b{display:flex;justify-content:space-between}.shelf b span{color:var(--amber)}.shelf p{margin:4px 0 0;color:var(--mute)}
+.new{font-size:12.5px;margin-top:6px}.new div{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dashed #2a2521}.new div span{color:var(--mute)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:820px){.app{grid-template-columns:1fr}.side,.toc{display:none}.now,.home,.two{grid-template-columns:1fr}}
+</style></head><body><main>
+<p class="sub">LIBRARY · 7 Oct 2026 · spec, then the build</p>
+<h1>The Great Library, rebuilt as a place you'd actually open</h1>
+<p class="sub">You said: "the docs are all shit … I don't see why I would use it." Agreed. Below is what it's for, what you'll see, and how it joins the Estate.</p>
+
+<h2>Why it's useless today (I looked at all three)</h2>
+<div class="now">
+<div class="card"><b>Agent Base → Library</b><p>A flat list of 93 links, each saying "Links and HTML are inert". It has no reader, no shelves and no reason to come back.</p></div>
+<div class="card"><b>great-library-of-siso.pages.dev</b><p>A good-looking shell, but it opens on a mission statement and registry plumbing (Releases, Snapshots, Promotion). There are no docs to read.</p></div>
+<div class="card"><b>What's missing</b><p>579 pages agents have shown you in the console, 599 specs and docs across 67 live projects, and 267 industry pack docs. None of them can be found again.</p></div>
+</div>
+
+<h2>What it's for (first principles)</h2>
+<ol>
+<li><span class="k">Reread anything written for you.</span> Every spec, report and page an agent has made you, in one place, newest first.</li>
+<li><span class="k">See what we know about X.</span> Research, industry packs, books and Foundry findings, each on its own shelf with a good front page.</li>
+<li><span class="k">Find something to build from.</span> The component, repo and template banks and the Works, so nothing starts from zero.</li>
+<li><span class="k">Agents search before they build.</span> The same index works as a CLI and JSON, so an agent finds the doc before writing another one.</li>
+</ol>
+
+<h2>What you'll see: a Notion-style reader</h2>
+<div class="mock">
+<div class="bar"><b style="color:var(--ink)">Estate</b><span class="seg"><span>World</span><span class="on">Library</span></span><span style="margin-left:auto">one rail icon · the land and the building on it</span></div>
+<div class="app">
+<div class="side">
+<div class="q"><span>Search everything…</span><span>⌘K</span></div>
+<div class="i on">Home</div><div class="i">Recent</div><div class="i">Starred <small>4</small></div>
+<div class="h">Shelves</div>
+<div class="i">Pages for you <small>412</small></div>
+<div class="i">Projects <small>599</small></div><div class="i c">Agent Base</div><div class="i c">HALO · Oracle</div><div class="i c">Estate</div>
+<div class="i">Research <small>~80</small></div>
+<div class="i">Industries <small>267</small></div>
+<div class="i">Books <small>40</small></div>
+<div class="i">Banks <small>5</small></div>
+<div class="i">Works <small>51</small></div>
+</div>
+<div class="page">
+<div class="crumb">Library / Home</div>
+<h3>The Great Library</h3>
+<div class="meta"><span class="pill">2,100 docs</span><span class="pill">rebuilt 08:00</span><span>search reads every word</span></div>
+<b style="font-size:13px">New this week</b>
+<div class="new"><div>The SISO UI system: one spine <span>UI-HUB · Tue</span></div><div>WhatsApp v2: Agent Base's own look <span>AGENT-BASE · Tue</span></div><div>ADR 0001: reason from the budget <span>Agent Zero · Mon</span></div><div>Beyond dispensaries: what's worth looking at <span>SISO-AGENCY · Mon</span></div></div>
+<div class="home">
+<div class="shelf"><b>Pages for you <span>412</span></b><p>Everything agents showed you, by project and day</p></div>
+<div class="shelf"><b>Projects <span>67</span></b><p>Each project's front door, specs and status</p></div>
+<div class="shelf"><b>Industries <span>17</span></b><p>Industry packs: operator, tools, open source</p></div>
+<div class="shelf"><b>Research <span>~80</span></b><p>God Questions, Foundry findings, frontier work</p></div>
+<div class="shelf"><b>Books <span>40</span></b><p>The knowledge corpus, by topic</p></div>
+<div class="shelf"><b>Banks <span>5</span></b><p>Components, repos, templates to build from</p></div>
+</div>
+</div>
+<div class="toc"><b style="color:var(--ink)">On this page</b><div class="on">New this week</div><div>Shelves</div><div>Starred</div></div>
+</div></div>
+<p class="sub" style="margin-top:10px">Opening a doc gives a breadcrumb, the title, who wrote it and when, its source, a ★, an "On this page" list down the right, and Markdown set in clean type. HTML pages render as themselves.</p>
+
+<h2>The shelves, and what each shows first</h2>
+<table>
+<tr><th>Shelf</th><th>What's on it</th><th>Front page shows</th></tr>
+<tr><td><b>Pages for you</b></td><td>Every HTML page posted to you in the console (579, folded to ~412 after versions merge)</td><td>Newest first, grouped by day; filter by owner. Each page keeps its earlier versions.</td></tr>
+<tr><td><b>Projects</b></td><td>67 live projects: the door (AGENTS.md), README, specs, ADRs, domain bases and where the work stands (HANDOFF)</td><td>Grouped by district (Agent stack, Agency, HALO, Library, Home). Each project page leads with its one-line purpose, owner, status and specs.</td></tr>
+<tr><td><b>Research</b></td><td>God Questions, frontier questions, Foundry intelligence, Library research</td><td>The open questions and their latest findings</td></tr>
+<tr><td><b>Industries</b></td><td>siso-industry-packs (267 docs)</td><td>A grid of industries; each opens its pack</td></tr>
+<tr><td><b>Books</b></td><td>The knowledge corpus: 40 books, with sections by topic (in search, not in the nav)</td><td>The books with one line each, then topics</td></tr>
+<tr><td><b>Banks</b></td><td>The component bank, repo bank, UI base, UI hub and shell templates</td><td>What you can reuse, with a link to ui-pick and the live gallery</td></tr>
+<tr><td><b>Works</b></td><td>The 51 registered Works</td><td>The catalog. It links to the existing public dossiers, which stay as they are.</td></tr>
+</table>
+<p>Search reads every word on every shelf (Pagefind: static, instant, offline), plus the 7,000 corpus sections the nav doesn't list.</p>
+
+<h2>The Estate and the Library, one place</h2>
+<div class="two">
+<div><ol>
+<li><b>One rail icon, "Estate".</b> Inside it, a switch between <b>World</b> (the 3D land) and <b>Library</b> (the building). The separate Library icon is retired.</li>
+<li><b>Walk in from the map.</b> Clicking the Library building in the World opens the Library, and clicking a project's building opens its Projects page.</li>
+<li><b>The register stays with the land.</b> The old Built and Live lists go under World as "Register", because they're where-things-are data.</li>
+</ol></div>
+<div><ol start="4">
+<li><b>One build, two homes, the same as the Estate.</b> The Library builds into one static folder. Agent Base shows it at <code>/library-site/</code>, and a private Cloudflare Worker serves it to your phone behind the Estate's password.</li>
+<li><b>Fresh by itself.</b> A rebuild every hour picks up new pages and docs. Nothing is copied by hand.</li>
+<li><b>Private stays private.</b> Life, WhatsApp, Fahmy, <code>personal/</code> and anything that looks like a key never leave the laptop build.</li>
+</ol></div>
+</div>
+
+<h2>Cleaning up the docs</h2>
+<ul>
+<li><b>Fold duplicates.</b> Identical files fold into one, wherever they sit. The same page posted many times becomes one page with its versions.</li>
+<li><b>Archive what's dead.</b> I'll read the Library's own 39 docs and archive the superseded ones (the four earlier UI specs, among others) under <code>_archive/</code>. Nothing gets deleted.</li>
+<li><b>Hide the plumbing.</b> Releases, Snapshots and Promotion leave the main nav. They stay reachable for agents.</li>
+</ul>
+
+<h2>Build order</h2>
+<ol>
+<li>The generator, the reader and search, over the seven shelves. Check: it opens in a browser at 1440 and 390 px. <i>Today.</i></li>
+<li>The private Cloudflare Worker, with the Estate's password. Check: a 401 without the password and a 200 with it. <i>Today.</i></li>
+<li>The Agent Base side (World | Library on one icon). AGENT-BASE builds it from my notes file. Check: ab-smoke passes and a screenshot shows it.</li>
+<li>The hourly rebuild, then the doc clean-up and archive.</li>
+</ol>
+</main></body></html>

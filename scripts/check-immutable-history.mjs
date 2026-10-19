@@ -20,6 +20,7 @@ if (inside.status !== 0 || inside.stdout.trim() !== "true") {
   console.log("PASS immutable history: source archive is not a Git checkout; registry schema checks remain active");
   process.exit(0);
 }
+const prefix = git(["rev-parse", "--show-prefix"]).stdout.trim();
 
 if (git(["rev-parse", "--verify", `${base}^{commit}`], true).status !== 0) {
   console.error(`FAIL immutable history: comparison base ${base} does not resolve`);
@@ -27,7 +28,7 @@ if (git(["rev-parse", "--verify", `${base}^{commit}`], true).status !== 0) {
 }
 
 const diff = git([
-  "diff", "--name-status", "--find-renames", "--diff-filter=MRTD", base, "--",
+  "diff", "--relative", "--name-status", "--find-renames", "--diff-filter=MRTD", base, "--",
   ...immutableDirectories, inventoryDirectory,
 ]).stdout.trim();
 
@@ -52,7 +53,7 @@ for (const line of diff ? diff.split("\n") : []) {
     }
   }
   if (!immutable) {
-    const previous = git(["show", `${base}:${originalPath}`], true);
+    const previous = git(["show", `${base}:${prefix}${originalPath}`], true);
     if (previous.status === 0) {
       try { immutable = JSON.parse(previous.stdout).immutable === true; }
       catch { /* Registry validation reports malformed historical records. */ }
