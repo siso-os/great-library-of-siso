@@ -6,6 +6,9 @@ import { fileURLToPath } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const requested = process.argv.slice(2);
 const targets = requested.length ? requested : ["."];
+// These independently checked sibling repositories are outside the catalog
+// publication surface, as declared by the catalog root .gitignore.
+const siblingRepositories = new Set(["knowledge", "people-graph", "foundry", "banks", "works"]);
 const findings = [];
 const scanned = [];
 const rules = [
@@ -24,6 +27,7 @@ async function walk(target) {
   catch (error) { if (error.code === "ENOENT") return; throw error; }
   for (const entry of entries) {
     if ([".git", ".local", ".claude", "node_modules"].includes(entry.name)) continue;
+    if (path.resolve(target) === root && siblingRepositories.has(entry.name)) continue;
     const child = path.join(target, entry.name);
     if (entry.isDirectory()) await walk(child);
     else if (entry.isFile()) await scan(child);

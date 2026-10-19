@@ -1,0 +1,11 @@
+{
+  "id": "library",
+  "purpose": "knowledge: works, banks, people graph, foundry, research",
+  "layers": [
+    "knowledge"
+  ],
+  "may_use": [
+    "platform",
+    "knowledge"
+  ]
+}
