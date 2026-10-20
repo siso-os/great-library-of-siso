@@ -105,6 +105,7 @@ The Great Library of SISO — Built by the SISO Open Source Foundation · Funded
 - `library/knowledge` | siso.library.knowledge | The knowledge system: sources, pipelines, pages, books, graph (content in data blocks)
 - `library/knowledge/app` | siso.library.knowledge.app | The SISO Knowledge app: composes the knowledge collections into one searchable place
 - `library/people-graph` | siso.library.people-graph | People graph: who is who, linked to books, repos and videos (data in blocks)
+- `library/people-watch` | siso.imports.people.watch | People-watch application source mixed with raw records and split SQLite payload; safety hold.
 - `library/works/books` | siso.imports.book.library | Queryable public-domain book index tooling; bulk books stay outside.
 - `library/works/declassified` | siso.imports.declassified.records | Public-record research department tooling and evidence model.
 - `library/works/erdos` | siso.library.works.erdos | Erdos problems work (was siso-unsolveable-mathematics)
