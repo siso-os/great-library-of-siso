@@ -1026,7 +1026,7 @@ function navigationFrame(path, contents) {
       ...(works.some(work => work.slug === 'siso-source') ? [['SISO Source · private', 'works/siso-source/', 'lock', true]] : []),
     ] },
     { id: 'registry', label: 'Registry', destinations: [
-      ['Activity & decisions', 'intelligence/', 'activity'], ['Repo estate', 'estate/', 'git-branch'], ['Promotion', 'promotion/', 'layers'],
+      ['Activity & decisions', 'intelligence/', 'activity'], ['Repo estate', 'ops/estate/', 'git-branch'], ['Promotion', 'promotion/', 'layers'],
       ['Releases', 'releases/', 'tag'], ['Snapshots', 'snapshots/', 'square-stack'],
     ] },
     { id: 'guides', label: 'Start here', destinations: [

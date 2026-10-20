@@ -22,7 +22,7 @@
         "library/knowledge/app/LICENSE",
         "library/people-graph/LICENSE",
         "library/works/erdos/siso-unsolveable-mathematics/LICENSE",
-        "platform/ui/design-system/LICENSE"
+        "packages/ui/design-system/LICENSE"
       ],
       "reuse_decision": "No compatible existing runtime implementation at target; license may match other modules."
     },
