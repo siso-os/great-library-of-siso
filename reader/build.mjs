@@ -517,7 +517,13 @@ async function main() {
   write("catalogue.json", JSON.stringify({ built: new Date(NOW).toISOString(), cloud: CLOUD, shelves: SHELVES.map((s) => ({ ...s, count: shelfCount(s.id) })), docs: index }));
   write("llms.txt", `# The Great Library of SISO (private reader)\n\nShelves: ${SHELVES.map((s) => `${s.name} (${shelfCount(s.id)})`).join(", ")}.\nEvery doc with its source path: ./catalogue.json\nFull-text search: ./pagefind/ (Pagefind index)\n`);
   const pf = path.join(HERE, "node_modules/.bin/pagefind");
-  const out = execFileSync(pf, ["--site", OUT, "--output-subdir", "pagefind", "--quiet"], { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] });
+  let out;
+  try {
+    out = execFileSync(pf, ["--site", OUT, "--output-subdir", "pagefind"], { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] });
+  } catch (error) {
+    console.error("Pagefind indexing failed:", error.stdout || "(no stdout)", error.stderr || "(no stderr)");
+    throw error;
+  }
   console.log(JSON.stringify({ out: OUT, cloud: CLOUD, pages: n, docs: index.length, shelves: Object.fromEntries(SHELVES.map((s) => [s.id, shelfCount(s.id)])), seconds: Math.round((Date.now() - t0) / 100) / 10, pagefind: out.trim().split("\n").slice(-2).join(" ") }));
 }
 main();
