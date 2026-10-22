@@ -51,6 +51,7 @@ tmp/
 # repository (see the estate map in ~/SISO_Workspace/AGENTS.md); this catalog repo never tracks them.
 /knowledge/
 /people-graph/
+/people-watch/
 /foundry/
 /banks/
 /works/

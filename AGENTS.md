@@ -106,14 +106,11 @@ The Great Library of SISO — Built by the SISO Open Source Foundation · Funded
 - `library/knowledge/app` | siso.library.knowledge.app | The SISO Knowledge app: composes the knowledge collections into one searchable place
 - `library/people-graph` | siso.library.people-graph | People graph: who is who, linked to books, repos and videos (data in blocks)
 - `library/people-watch` | siso.imports.people.watch | People-watch application source mixed with raw records and split SQLite payload; safety hold.
-- `library/works/books` | siso.imports.book.library | Queryable public-domain book index tooling; bulk books stay outside.
-- `library/works/declassified` | siso.imports.declassified.records | Public-record research department tooling and evidence model.
 - `library/works/erdos` | siso.library.works.erdos | Erdos problems work (was siso-unsolveable-mathematics)
+- `library/works/librarian` | siso.imports.librarian | Standing agent that grows and maintains the Great Library.
 - `library/works/repo-bank` | siso.library.works.repo-bank | Repo reuse catalog pipeline, GitHub farm tooling and curated prior art; bulk banks stay at pinned source
 - `library/works/repo-bank/bank` | siso.library.banks.repo-bank | Repo Bank corpus metadata and historical collection receipts; authored tooling is siso.library.works.repo-bank
 - `library/works/siso-evidence-engines` | siso.library.works.evidence-engines | Evidence engines research work
-- `library/works/siso-stargate-library` | siso.library.works.stargate | Remote viewing and psychoenergetics research (public mirror archived)
 - `library/works/task0001` | siso.products.os.task0001 | SISO Internal TASK-0001 programme archive: control-plane atlas, design directions and evidence.
-- `library/works/trader-platform-research` | siso.library.works.trader-platform | Trader platform research and its site
 - `library/works/unfuck-the-project` | siso.library.works.unfuck | Whole-project ownership prompt pack for agents
 <!-- siso:district end -->

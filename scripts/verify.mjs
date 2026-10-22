@@ -18,6 +18,7 @@ const checks = [
   ["reading surface contract", "tests/reading-surface.test.mjs"],
   ["Foundry industry and value readers", "tests/industries.test.mjs"],
   ["site links and identity", "scripts/check-site.mjs"],
+  ["publication collection boundary", "tests/publication-boundary.test.mjs"],
   ["publication safety scan", "scripts/scan-publication.mjs"]
 ];
 
