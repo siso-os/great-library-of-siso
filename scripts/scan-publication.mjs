@@ -8,7 +8,7 @@ const requested = process.argv.slice(2);
 const targets = requested.length ? requested : ["."];
 // These independently checked sibling repositories are outside the catalog
 // publication surface, as declared by the catalog root .gitignore.
-const siblingRepositories = new Set(["knowledge", "people-graph", "foundry", "banks", "works"]);
+const siblingRepositories = new Set(["knowledge", "people-graph", "people-watch", "foundry", "banks", "works"]);
 const findings = [];
 const scanned = [];
 const rules = [
