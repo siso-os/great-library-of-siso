@@ -16,6 +16,8 @@ heavy --on laptop -- node build.mjs >> "$log" 2>&1 || { say "local build FAILED"
 [ "${1:-}" = "--no-cloud" ] && exit 0
 wrangler=../node_modules/.bin/wrangler
 [ -x "$wrangler" ] || wrangler="$HOME/SISO_Workspace/Great_Library_of_SISO/node_modules/.bin/wrangler"
+# neither checkout carries node_modules since the monorepo move: 29 hourly deploys failed after 21 Oct 18:13 (BRAVE, 23 Oct)
+[ -x "$wrangler" ] || wrangler="$(PATH="$PATH:$HOME/.npm-global/bin" command -v wrangler)"
 heavy --on laptop -- node build.mjs --cloud >> "$log" 2>&1 || { say "cloud build FAILED"; exit 1; }
 "$wrangler" deploy -c deploy/wrangler.toml --assets "$HOME/SISO_Workspace/_data/great-library/reader-dist-cloud" >> "$log" 2>&1 || { say "deploy FAILED"; exit 1; }
 say "done"
